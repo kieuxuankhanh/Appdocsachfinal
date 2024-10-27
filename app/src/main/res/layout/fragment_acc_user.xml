@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:padding="10dp"
+    android:id="@+id/detail_user"
+    tools:context=".FragmentAdmin.AccFragmentUser">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginTop="20dp"
+        >
+        <LinearLayout
+            android:id="@+id/user_profile"
+            android:layout_width="match_parent"
+            android:layout_height="150dp"
+            android:padding="20dp"
+            android:background="@drawable/bg_text"
+            android:backgroundTint="@color/main_color"
+            android:orientation="horizontal">
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/img_avatar"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:src="@drawable/avatar"/>
+            <LinearLayout
+                android:gravity="center_vertical"
+                android:layout_marginLeft="20dp"
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:orientation="vertical">
+                <TextView
+                    android:id="@+id/txt_name"
+                    android:textColor="@color/white"
+                    android:textStyle="bold"
+                    android:textSize="20sp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Name"
+                    />
+                <TextView
+                    android:layout_marginTop="4dp"
+                    android:id="@+id/txt_email"
+                    android:textColor="@color/white"
+                    android:textSize="16sp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Email"
+                    />
+                <TextView
+                    android:id="@+id/txt_date"
+                    android:layout_marginTop="4dp"
+                    android:textColor="@color/white"
+                    android:textSize="16sp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Date"
+                    />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                    <TextView
+                        android:layout_marginTop="4dp"
+                        android:textColor="@color/white"
+                        android:textSize="16sp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Sách yêu thích"
+                        />
+                    <TextView
+                        android:id="@+id/txt_like"
+                        android:layout_marginTop="4dp"
+                        android:textColor="@color/white"
+                        android:textSize="16sp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:text="N/A"
+                        />
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_marginTop="40dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_text"
+            android:backgroundTint="@color/main_color"
+            android:orientation="vertical">
+            <Button
+                android:id="@+id/btnsetting"
+                android:layout_width="match_parent"
+                android:layout_height="90dp"
+                android:background="@color/main_color"
+                app:backgroundTint="@null"
+                android:padding="20dp"
+                android:text="Cài đặt"
+                android:gravity="center_vertical"
+                android:textColor="#FFFFFF"
+                android:textSize="16sp"
+                android:cursorVisible="true"
+                android:focusable="true"
+                android:focusableInTouchMode="true" />
+            <Button
+                android:id="@+id/btnlikebook"
+                android:layout_width="match_parent"
+                android:layout_height="90dp"
+                android:background="@color/main_color"
+                app:backgroundTint="@null"
+                android:padding="20dp"
+                android:text="Sách yêu thích"
+                android:gravity="center_vertical"
+                android:textColor="#FFFFFF"
+                android:textSize="16sp"
+                android:cursorVisible="true"
+                android:focusable="true"
+                android:focusableInTouchMode="true" />
+            <Button
+                android:id="@+id/btnchangepass"
+                android:layout_width="match_parent"
+                android:layout_height="90dp"
+                android:background="@color/main_color"
+                app:backgroundTint="@null"
+                android:padding="20dp"
+                android:text="Đổi mật khẩu"
+                android:gravity="center_vertical"
+                android:textColor="#FFFFFF"
+                android:textSize="16sp"
+                android:cursorVisible="true"
+                android:focusable="true"
+                android:focusableInTouchMode="true" />
+            <Button
+                android:id="@+id/btndeltk"
+                android:layout_width="match_parent"
+                android:layout_height="90dp"
+                android:background="@color/main_color"
+                app:backgroundTint="@null"
+                android:padding="20dp"
+                android:text="Xóa tài khoản"
+                android:gravity="center_vertical"
+                android:textColor="#FFFFFF"
+                android:textSize="16sp"
+                android:cursorVisible="true"
+                android:focusable="true"
+                android:focusableInTouchMode="true" />
+        </LinearLayout>
+        <Button
+            android:id="@+id/btnout"
+            android:layout_marginTop="50dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_account"
+            android:textColor="@color/main_color"
+            android:textSize="20sp"
+            android:backgroundTintMode="multiply"
+            android:textStyle="bold"
+            android:text="Đăng xuất"/>
+
+    </LinearLayout>
+
+</androidx.core.widget.NestedScrollView>

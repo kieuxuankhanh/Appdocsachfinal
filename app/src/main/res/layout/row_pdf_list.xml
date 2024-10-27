@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="110dp"
+    android:layout_height="190dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:clickable="true"
+    android:gravity="start"
+    android:focusable="true"
+    android:layout_marginStart="5dp"
+    android:layout_marginEnd="5dp"
+    >
+
+    <RelativeLayout
+        android:id="@+id/bookRL"
+        android:layout_width="110dp"
+        android:layout_height="140dp"
+        >
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/bg_indicator"
+            app:cardCornerRadius="15dp"
+            app:cardElevation="4dp">
+
+            <com.github.barteksc.pdfviewer.PDFView
+                android:id="@+id/pdfView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+            <ProgressBar
+                android:id="@+id/progressBar"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+        </androidx.cardview.widget.CardView>
+    </RelativeLayout>
+    <TextView
+        android:gravity="center"
+        android:id="@+id/txttitle"
+        android:layout_width="110dp"
+        android:layout_height="wrap_content"
+        android:padding="5dp"
+        android:layout_below="@+id/bookRL"
+        android:text="truyen tranh"
+        android:textSize="14sp"
+        android:textColor="#000"
+        android:maxLines="2"
+        android:ellipsize="end"/>
+</RelativeLayout>

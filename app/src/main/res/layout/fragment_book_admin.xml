@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".FragmentAdmin.BookFragmentAdmin">
+    <RelativeLayout
+        android:id="@+id/relative1"
+        android:layout_width="match_parent"
+        android:layout_height="250dp"
+        android:layout_marginTop="-40dp"
+        android:background="@drawable/bg_book"
+        >
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/logoLB"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:src="@drawable/photologo"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Thêm thể loại"
+            android:layout_marginTop="5dp"
+            android:layout_below="@+id/logoLB"
+            android:textSize="24dp"
+            android:textStyle="bold"
+            android:textColor="@color/white"
+            android:gravity="center_horizontal"/>
+
+    </RelativeLayout>
+    <EditText
+        android:id="@+id/edtsearch"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/relative1"
+        android:hint="Tìm kiếm"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginTop="10dp"
+        android:drawableStart="@drawable/sharp_search_24"
+        android:drawableTint="@color/main_color"
+        android:padding="10dp"
+        android:background="@color/white"
+        android:textColorHint="@color/main_color"
+        />
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/catagoryRecycleview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/edtsearch"
+        tools:listitem="@layout/row_category"
+        android:layout_margin="10dp"
+        android:layout_above="@id/btnthemtheloai"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
+    <Button
+        android:layout_marginBottom="96dp"
+        android:id="@+id/btnthemtheloai"
+        android:backgroundTint="@color/main_color"
+        app:backgroundTint="@null"
+        style="@style/Widget.AppCompat.Button.Borderless"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/button1"
+        android:layout_marginStart="30dp"
+        android:layout_marginEnd="30dp"
+        android:layout_marginTop="20dp"
+        android:text="Thêm thể loại"
+        android:layout_alignParentBottom="true"/>
+</RelativeLayout>

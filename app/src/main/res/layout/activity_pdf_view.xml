@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Activities.PdfViewActivity">
+    <RelativeLayout
+        android:id="@+id/toolbarRLV"
+        android:layout_width="match_parent"
+        android:layout_height="?actionBarSize"
+        android:background="@drawable/bg_text"
+        >
+        <ImageButton
+            android:id="@+id/btnback"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="10dp"
+            android:src="@drawable/sharp_arrow_back_24"
+            android:background="@android:color/transparent"
+            android:backgroundTint="@color/main_color"/>
+        <TextView
+            android:id="@+id/txtnamebook"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Đọc sách"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            android:textColor="@color/main_color"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="8dp"
+            />
+        <TextView
+            android:id="@+id/txtpage"
+            android:layout_below="@+id/txtnamebook"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="N/N"
+            android:textSize="14sp"
+            android:textColor="@color/main_color"
+            android:layout_centerHorizontal="true" />
+
+    </RelativeLayout>
+    <com.github.barteksc.pdfviewer.PDFView
+        android:id="@+id/pdfView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/toolbarRLV"/>
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"/>
+
+
+</RelativeLayout>

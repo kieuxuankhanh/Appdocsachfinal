@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.swiperefreshlayout.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:id="@+id/swipeRefreshLayout"
+    android:layout_height="match_parent"
+    android:layout_marginBottom="96dp">
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <LinearLayout
+            android:padding="10dp"
+            android:gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:orientation="vertical">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center"
+                android:paddingTop="0dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Đề xuất"
+                    android:textStyle="bold"
+                    android:textSize="30dp"
+                    android:gravity="center"/>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="164dp">
+                    <ImageView
+                        android:paddingLeft="15dp"
+                        android:paddingRight="15dp"
+                        android:id="@+id/imageView3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="37dp"
+                        app:srcCompat="@drawable/sharp_search_24"
+                        android:backgroundTint="@color/main_color"/>
+
+                </LinearLayout>
+            </LinearLayout>
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center">
+                <androidx.cardview.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="220dp"
+                    android:layout_margin="10dp"
+                    app:cardCornerRadius="22dp">
+                    <com.denzcoskun.imageslider.ImageSlider
+                        android:id="@+id/image_slider"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        app:iss_delay="1000"
+                        app:iss_period="1000"
+                        app:iss_text_align="CENTER"
+                        app:iss_auto_cycle="true"/>
+
+                </androidx.cardview.widget.CardView>
+            </RelativeLayout>
+
+            <LinearLayout
+                android:layout_marginTop="0dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:gravity="center">
+                <TextView
+                    android:id="@+id/edttruyen1"
+                    android:layout_marginTop="0dp"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_weight="1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Truyen moi"
+                    android:textStyle="bold"
+                    android:textSize="24dp"/>
+                <TextView
+                    android:id="@+id/edtmore1"
+                    android:layout_gravity="center_vertical"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Xem thêm"
+                    android:textColor="@color/black"
+                    />
+            </LinearLayout>
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <androidx.viewpager2.widget.ViewPager2
+                    android:id="@+id/viewpager2"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"/>
+
+                <ProgressBar
+                    android:id="@+id/progress_bar5"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    style="?android:attr/progressBarStyle" />
+
+            </FrameLayout>
+
+            <LinearLayout
+                android:layout_marginTop="0dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:gravity="center">
+                <TextView
+                    android:id="@+id/edttruyen2"
+                    android:layout_marginTop="0dp"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_weight="1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Truyen de cu"
+                    android:textStyle="bold"
+                    android:textSize="24dp"/>
+                <TextView
+                    android:id="@+id/edtmore2"
+                    android:layout_gravity="center_vertical"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Xem thêm"
+                    android:textColor="@color/black"
+                    />
+            </LinearLayout>
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/booksRCV"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:stackFromEnd="true"
+                app:reverseLayout="true"
+                tools:listitem="@layout/row_pdf_list"/>
+            <LinearLayout
+                android:layout_marginTop="0dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:gravity="center">
+                <TextView
+                    android:id="@+id/edttruyen3"
+                    android:layout_marginTop="0dp"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_weight="1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Tai ve nhieu nhat"
+                    android:textStyle="bold"
+                    android:textSize="24dp"/>
+
+                <TextView
+                    android:id="@+id/edtmore3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:text="Xem thêm"
+                    android:textColor="@color/black" />
+            </LinearLayout>
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/downloadRCV"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                tools:listitem="@layout/row_pdf_list" />
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/theloaiRCV"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:stackFromEnd="true"
+                android:scrollbars="none"
+                android:nestedScrollingEnabled="false"
+                android:orientation="horizontal"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                tools:listitem="@layout/item_list_home"/>
+
+            <Button
+                android:id="@+id/buttonkhampha"
+                app:backgroundTint="@null"
+                style="@style/Widget.AppCompat.Button.Borderless"
+                android:layout_width="240dp"
+                android:layout_height="match_parent"
+                android:text="Khám phá thêm truyện"
+                android:textAllCaps="false"
+                android:drawableTint="@color/white"
+                android:drawableLeft="@drawable/sharp_book_ribbon_24"
+                android:background="@drawable/button1"
+                android:backgroundTint="@color/main_color"
+                />
+        </LinearLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
+
+</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

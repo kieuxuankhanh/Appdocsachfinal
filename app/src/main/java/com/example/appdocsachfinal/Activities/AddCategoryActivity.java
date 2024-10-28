@@ -29,64 +29,56 @@ public class AddCategoryActivity extends AppCompatActivity {
         binding = ActivityAddCategoryBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        firebaseAuth= FirebaseAuth.getInstance();
-        progressDialog = new ProgressDialog(this);
-        progressDialog.setTitle("Doi chut");
-        progressDialog.setCanceledOnTouchOutside(false);
-
-        binding.btnsubmit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                validateData();
-            }
-        });
-        binding.btnback.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
-
+        firebaseAuth = FirebaseAuth.getInstance();
+        initProgressDialog();
+        setButtonListeners();
     }
 
-    private String category="";
-    private void validateData() {
+    private void initProgressDialog() {
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setTitle("Đợi chút");
+        progressDialog.setCanceledOnTouchOutside(false);
+    }
 
-        category = binding.edttheloai.getText().toString().trim();
-        if (TextUtils.isEmpty(category)){
-            Toast.makeText(this, "Nhap the loai", Toast.LENGTH_SHORT).show();
-        }else {
-            addCategoryFireBase();
+    private void setButtonListeners() {
+        binding.btnsubmit.setOnClickListener(v -> validateData());
+        binding.btnback.setOnClickListener(v -> finish());
+    }
+
+    private void validateData() {
+        String category = binding.edttheloai.getText().toString().trim();
+        if (TextUtils.isEmpty(category)) {
+            showToast("Nhập thể loại");
+        } else {
+            addCategoryToFirebase(category);
         }
     }
 
-    private void addCategoryFireBase() {
-        progressDialog.setMessage("Dang them the loai");
+    private void addCategoryToFirebase(String category) {
+        progressDialog.setMessage("Đang thêm thể loại");
         progressDialog.show();
-        long timestamp = System.currentTimeMillis();
 
-        HashMap<String,Object> hashMap = new HashMap<>();
-        hashMap.put("id",""+timestamp);
-        hashMap.put("category",""+category);
-        hashMap.put("timestamp",timestamp);
-        hashMap.put("uid",""+firebaseAuth.getUid());
+        long timestamp = System.currentTimeMillis();
+        HashMap<String, Object> hashMap = new HashMap<>();
+        hashMap.put("id", String.valueOf(timestamp));
+        hashMap.put("category", category);
+        hashMap.put("timestamp", timestamp);
+        hashMap.put("uid", firebaseAuth.getUid());
 
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Categories");
-        ref.child(""+timestamp)
+        ref.child(String.valueOf(timestamp))
                 .setValue(hashMap)
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void unused) {
-                        progressDialog.dismiss();
-                        Toast.makeText(AddCategoryActivity.this, "Them the loai thanh cong", Toast.LENGTH_SHORT).show();
-                    }
+                .addOnSuccessListener(unused -> {
+                    progressDialog.dismiss();
+                    showToast("Thêm thể loại thành công");
                 })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        progressDialog.dismiss();
-                        Toast.makeText(AddCategoryActivity.this, ""+e.getMessage(), Toast.LENGTH_SHORT).show();
-                    }
+                .addOnFailureListener(e -> {
+                    progressDialog.dismiss();
+                    showToast(e.getMessage());
                 });
+    }
+
+    private void showToast(String message) {
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
     }
 }

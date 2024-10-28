@@ -83,7 +83,7 @@
         android:layout_height="wrap_content"
         app:hintEnabled="false"
         android:layout_marginStart="30dp"
-        android:layout_marginEnd="30dp"
+        android:layout_marginEnd="40dp"
         android:layout_marginTop="20dp"
         android:layout_below="@+id/txttenbook">
         <EditText
@@ -109,7 +109,7 @@
        android:layout_height="wrap_content"
        android:layout_below="@+id/txtmota"
        android:layout_marginStart="30dp"
-       android:layout_marginEnd="30dp"
+       android:layout_marginEnd="20dp"
        android:layout_marginTop="20dp"
        android:background="@drawable/bg_text"
        android:drawableStart="@drawable/book"
@@ -132,7 +132,7 @@
         android:layout_height="wrap_content"
         android:background="@drawable/button1"
         android:layout_marginStart="30dp"
-        android:layout_marginEnd="30dp"
+        android:layout_marginEnd="20dp"
         android:layout_marginTop="20dp"
         android:text="Thêm"
         android:textStyle="bold"

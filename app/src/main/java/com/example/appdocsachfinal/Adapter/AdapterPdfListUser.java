@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -39,10 +40,9 @@ public class AdapterPdfListUser extends RecyclerView.Adapter<AdapterPdfListUser.
         ModelListPdf modelListPdf = pdfArrayListUser.get(position);
         String bookId = modelListPdf.getId();
         String title = modelListPdf.getTitle();
-        String pdfUrl = modelListPdf.getUrl();
-
         holder.txttitle.setText(title);
-        MyApplication.loadPdfFromUrlSinglePage(pdfUrl, title, holder.pdfView, holder.progressBar,null);
+//        MyApplication.loadPdfFromUrlSinglePage(pdfUrl, title, holder.pdfView, holder.progressBar,null);
+        MyApplication.loadImageFromUrl(bookId, holder.imageView, holder.progressBar);
         holder.itemView.setOnClickListener(v -> {
             Intent intent = new Intent(context, PdfDetailActivity.class);
             intent.putExtra("bookId", bookId);
@@ -57,13 +57,14 @@ public class AdapterPdfListUser extends RecyclerView.Adapter<AdapterPdfListUser.
 
     class HolderPdfListUser extends RecyclerView.ViewHolder {
         TextView txttitle;
-        PDFView pdfView;
+//        PDFView pdfView;
+        ImageView imageView;
         ProgressBar progressBar;
 
         public HolderPdfListUser(@NonNull RowPdfListBinding binding) {
             super(binding.getRoot());
             txttitle = binding.txttitle;
-            pdfView = binding.pdfView;
+            imageView = binding.ImageThumb;
             progressBar = binding.progressBar;
         }
     }

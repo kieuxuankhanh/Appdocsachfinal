@@ -22,7 +22,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Thêm thể loại"
+            android:text="Thể loại"
             android:layout_marginTop="5dp"
             android:layout_below="@+id/logoLB"
             android:textSize="24dp"
@@ -44,7 +44,8 @@
         android:drawableTint="@color/main_color"
         android:padding="10dp"
         android:background="@color/white"
-        android:textColorHint="@color/main_color"
+        android:textColor="@color/black"
+        android:textColorHint="@color/grey"
         />
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/catagoryRecycleview"
@@ -52,7 +53,7 @@
         android:layout_height="match_parent"
         android:layout_below="@+id/edtsearch"
         tools:listitem="@layout/row_category_user"
-        android:layout_margin="10dp"
+        android:layout_marginBottom="96dp"
         android:layout_above="@id/btnthemtheloai"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
 

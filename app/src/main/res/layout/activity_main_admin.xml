@@ -7,16 +7,6 @@
     android:layout_height="match_parent"
     tools:context=".Activities.MainAdminActivity"
     >
-    <TextView
-        android:layout_marginTop="0dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Admin"
-        android:gravity="start"
-        android:textStyle="bold"
-        android:textSize="24dp"
-        android:background="@color/main_color"
-        android:textColor="@color/white"/>
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -37,6 +27,8 @@
             android:id="@+id/BottomNvi"
             android:layout_marginRight="16dp"
             app:menu="@menu/bottom_nav_menu"
+            app:itemIconTint="@drawable/bottom_nav_item_color"
+            app:itemTextColor="@drawable/bottom_nav_item_color"
             android:background="@drawable/bg_bottom"
             />
     </com.google.android.material.bottomappbar.BottomAppBar>
@@ -45,5 +37,6 @@
         android:layout_height="wrap_content"
         android:id="@+id/btnfab"
         android:src="@drawable/ic_baseline_add_24"
-        app:layout_anchor="@id/bottomflic"/>
+        app:layout_anchor="@id/bottomflic"
+        app:backgroundTint="@color/main_color"/>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

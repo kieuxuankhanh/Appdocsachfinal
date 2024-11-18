@@ -1,5 +1,6 @@
 package com.example.appdocsachfinal.Activities;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -10,11 +11,16 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.bumptech.glide.Glide;
 import com.example.appdocsachfinal.databinding.ActivityAddBookBinding;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -27,7 +33,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -40,6 +45,7 @@ public class AddBookActivity extends AppCompatActivity {
     private ProgressDialog progressDialog;
     private static final String TAG = "ADD_PDF_TAG";
     private Uri pdfUri = null;
+    private Uri imageUri;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,7 +53,7 @@ public class AddBookActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         progressDialog = new ProgressDialog(this);
-        progressDialog.setTitle("Doi ty");
+        progressDialog.setTitle("Đợi 1 chút nha!!!");
         progressDialog.setCanceledOnTouchOutside(false);
 
         firebaseAuth = FirebaseAuth.getInstance();
@@ -68,7 +74,7 @@ public class AddBookActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 validateData();
-
+                clear();
             }
         });
         binding.btnback.setOnClickListener(new View.OnClickListener() {
@@ -77,7 +83,18 @@ public class AddBookActivity extends AppCompatActivity {
                 onBackPressed();
             }
         });
-
+        binding.CVImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                pickImageGallery();
+            }
+        });
+    }
+    private void clear(){
+        binding.edttenbook.setText("");
+        binding.edtmota.setText("");
+        binding.edttheloai.setText("");
+        binding.imageThumb.setImageResource(0);
     }
     private String title="",description="";
     private void validateData() {
@@ -86,88 +103,137 @@ public class AddBookActivity extends AppCompatActivity {
         description = binding.edtmota.getText().toString().trim();
 
         if (TextUtils.isEmpty(title)){
-            Toast.makeText(this, "Nhap ten", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Nhập tên", Toast.LENGTH_SHORT).show();
         } else if (TextUtils.isEmpty(description)) {
-            Toast.makeText(this, "Nhap mo ta", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Nhập mô tả", Toast.LENGTH_SHORT).show();
         } else if (TextUtils.isEmpty(selectedCategoryTitle)) {
-            Toast.makeText(this, "Chon the loai", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Chọn thể loại", Toast.LENGTH_SHORT).show();
         } else if (pdfUri == null) {
-            Toast.makeText(this, "Chon pdf", Toast.LENGTH_SHORT).show();
-        }else {
-            upLoadPdfToStorage();
+            Toast.makeText(this, "Chọn tệp PDF", Toast.LENGTH_SHORT).show();
+        }else if (imageUri == null) {
+            Toast.makeText(this, "Chọn ảnh bìa sách", Toast.LENGTH_SHORT).show();
+        }
+        else {
+            uploadFilesToStorage();
         }
     }
 
-    private void upLoadPdfToStorage() {
-        Log.d(TAG,"upLoadPdfToStorage : Dang tai len");
-
-        progressDialog.setMessage("Dang tai Pdf");
+    private void uploadFilesToStorage() {
+        Log.d(TAG, "uploadFilesToStorage: Đang tải files");
+        progressDialog.setMessage("Đang tải dữ liệu...");
         progressDialog.show();
 
         long timestamp = System.currentTimeMillis();
-        String filePathAndName = "Books/"+timestamp;
-        StorageReference storageReference = FirebaseStorage.getInstance().getReference(filePathAndName);
-        storageReference.putFile(pdfUri)
-                .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                    @Override
-                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                        Log.d(TAG, "onSuccess: Da tai pdf len");
-                        Log.d(TAG, "onSuccess: lay pdf url");
+        //đẩy file lên storage
+        // Upload PDF
+        String pdfPathAndName = "Books/" + timestamp ;
+        StorageReference pdfRef = FirebaseStorage.getInstance().getReference(pdfPathAndName);
 
-                        Task<Uri> uriTask = taskSnapshot.getStorage().getDownloadUrl();
-                        while (!uriTask.isSuccessful());
-                        String uploadedPdfUrl = ""+uriTask.getResult();
-                        
-                        upLoadPdfIntoDb(uploadedPdfUrl, timestamp);
-                    }
+        // Tải ảnh
+        String imagePathAndName = "BookCovers/" + timestamp + ".jpg";
+        StorageReference imageRef = FirebaseStorage.getInstance().getReference(imagePathAndName);
+
+        // Tải ảnh trước
+        imageRef.putFile(imageUri)
+                .addOnSuccessListener(taskSnapshot -> {
+                    Task<Uri> imageUrlTask = taskSnapshot.getStorage().getDownloadUrl();
+                    imageUrlTask.addOnSuccessListener(imageDownloadUri -> {
+                        // Sau khi đẩy ảnh lên thì đẩy file Pdf
+                        pdfRef.putFile(pdfUri)
+                                .addOnSuccessListener(pdfTaskSnapshot -> {
+                                    Task<Uri> pdfUrlTask = pdfTaskSnapshot.getStorage().getDownloadUrl();
+                                    pdfUrlTask.addOnSuccessListener(pdfDownloadUri -> {
+                                        // tải ảnh lên database
+                                        uploadToDatabase(pdfDownloadUri.toString(), imageDownloadUri.toString(), timestamp);
+                                    });
+                                })
+                                .addOnFailureListener(e -> {
+                                    progressDialog.dismiss();
+                                    Log.d(TAG, "Thất bại: Tải PDF không thành công " + e.getMessage());
+                                    Toast.makeText(AddBookActivity.this, "Tải PDF không thành công " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                });
+                    });
                 })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        progressDialog.dismiss();
-                        Log.d(TAG, "That bai: Tai file PDf khong duoc"+e.getMessage());
-                        Toast.makeText(AddBookActivity.this, " Tai file PDf khong duoc"+e.getMessage(), Toast.LENGTH_SHORT).show();
-                    }
+                .addOnFailureListener(e -> {
+                    progressDialog.dismiss();
+                    Log.d(TAG, "Thất bại: Tải ảnh không thành công " + e.getMessage());
+                    Toast.makeText(AddBookActivity.this, "Tải ảnh không thành công " + e.getMessage(), Toast.LENGTH_SHORT).show();
                 });
     }
-
-    private void upLoadPdfIntoDb(String uploadedPdfUrl, long timestamp) {
-        Log.d(TAG,"upLoadPdfToStorage : Dang tai pdf vao firebase db");
-
-        progressDialog.setMessage("Dang tai noi dung pdf");
+    private void uploadToDatabase(String pdfUrl, String imageUrl, long timestamp) {
+        Log.d(TAG, "uploadToDatabase: Đang lưu thông tin vào database");
+        progressDialog.setMessage("Đang lưu thông tin sách");
+        //đẩy thông tin sách lên realtime database
         String uid = firebaseAuth.getUid();
         HashMap<String, Object> hashMap = new HashMap<>();
-        hashMap.put("uid",""+uid);
-        hashMap.put("id", ""+timestamp);
-        hashMap.put("title", ""+title);
-        hashMap.put("description", ""+description);
-        hashMap.put("categoryId", ""+selectedCategoryID);
-        hashMap.put("url", ""+uploadedPdfUrl);
+        hashMap.put("uid", "" + uid);
+        hashMap.put("id", "" + timestamp);
+        hashMap.put("title", "" + title);
+        hashMap.put("description", "" + description);
+        hashMap.put("categoryId", "" + selectedCategoryID);
+        hashMap.put("url", "" + pdfUrl);
         hashMap.put("timestamp", timestamp);
         hashMap.put("viewsCount", 0);
         hashMap.put("downloadsCount", 0);
+        hashMap.put("imageThumb", "" + imageUrl);
 
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Books");
-        ref.child(""+timestamp)
+        ref.child("" + timestamp)
                 .setValue(hashMap)
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void unused) {
-                        progressDialog.dismiss();
-                        Log.d(TAG,"OnSuccess: tai len db");
-                        Toast.makeText(AddBookActivity.this, "tai len db", Toast.LENGTH_SHORT).show();
-                    }
+                .addOnSuccessListener(unused -> {
+                    createNoti(timestamp);
+                    progressDialog.dismiss();
+                    Log.d(TAG, "OnSuccess: tải lên db thành công");
+                    Toast.makeText(AddBookActivity.this, "Tải lên thành công", Toast.LENGTH_SHORT).show();
                 })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        progressDialog.dismiss();
-                        Log.d(TAG,"OnFailure: Loi tai len db"+e.getMessage());
-                        Toast.makeText(AddBookActivity.this, "Loi tai len db", Toast.LENGTH_SHORT).show();
-                    }
+                .addOnFailureListener(e -> {
+                    progressDialog.dismiss();
+                    Log.d(TAG, "OnFailure: Lỗi tải lên db " + e.getMessage());
+                    Toast.makeText(AddBookActivity.this, "Lỗi tải lên database", Toast.LENGTH_SHORT).show();
                 });
     }
 
+    private void createNoti(long timestamp) {
+        DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("Users");
+        userRef.child(firebaseAuth.getUid())
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        String userName = ""+snapshot.child("name").getValue();
+
+                        // Tạo thông báo mỗi khi đăng truyện
+                        HashMap<String, Object> notificationMap = new HashMap<>();
+                        notificationMap.put("id", ""+timestamp);
+                        notificationMap.put("timestamp", timestamp);
+                        notificationMap.put("title", "Sách mới: " + title);
+                        notificationMap.put("message", userName + " đã đăng tải sách mới: " + title);
+                        notificationMap.put("bookId", ""+timestamp);
+                        notificationMap.put("uid", firebaseAuth.getUid());
+
+                        // Add to Firebase
+                        DatabaseReference notifRef = FirebaseDatabase.getInstance().getReference("Notifications");
+                        notifRef.child(""+timestamp)
+                                .setValue(notificationMap)
+                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void unused) {
+                                        Log.d(TAG, "Notification created successfully");
+                                    }
+                                })
+                                .addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        Log.d(TAG, "Failed to create notification: " + e.getMessage());
+                                    }
+                                });
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+                    }
+                });
+    }
+    //Tải thể loại
     private void loadPdfCategories() {
         Log.d(TAG,"LoadPdfCategories:  Dang tai the loai pdf...");
         categoryTitleArrayList = new ArrayList<>();
@@ -195,31 +261,60 @@ public class AddBookActivity extends AppCompatActivity {
         });
 
     }
+
+    //chọn thể loại
     private String selectedCategoryID,selectedCategoryTitle;
     private void CategoryPickDialog() {
-        Log.d(TAG, "categoryPickDialog: hien thi the loai");
+        Log.d(TAG, "categoryPickDialog: Hiển thị thể loại");
 
         String[] categoriesArray = new String[categoryTitleArrayList.size()];
         for (int i = 0; i< categoryTitleArrayList.size(); i++){
             categoriesArray[i] = categoryTitleArrayList.get(i);
         }
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Pick Category")
+        builder.setTitle("Chọn thể loại")
                 .setItems(categoriesArray, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         selectedCategoryTitle = categoryTitleArrayList.get(which);
                         selectedCategoryID = categoryIdArrayList.get(which);
                         binding.edttheloai.setText(selectedCategoryTitle);
-
-                        Log.d(TAG,"onClick: Chon the loai: "+categoryTitleArrayList);
-
+                        Log.d(TAG,"onClick: Chọn thể loại: "+categoryTitleArrayList);
                     }
                 })
                 .show();
-
     }
-
+    //chọn ảnh bìa truyện
+    private void pickImageGallery() {
+        Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+        intent.addCategory(Intent.CATEGORY_OPENABLE);
+        intent.setType("image/*");
+        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION);
+        galleryActivityResultLauncher.launch(intent);
+    }
+    //lấy ảnh từ thư viện
+    private ActivityResultLauncher<Intent> galleryActivityResultLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            new ActivityResultCallback<ActivityResult>() {
+                @Override
+                public void onActivityResult(ActivityResult result) {
+                    if (result.getResultCode() == Activity.RESULT_OK) {
+                        Intent data = result.getData();
+                        if (data != null) {
+                            imageUri = data.getData();
+                            if (imageUri != null) {
+                                // Lấy quyền truy cập lâu dài
+                                getContentResolver().takePersistableUriPermission(imageUri,
+                                        Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                                Log.d(TAG, "onActivityResult: lấy ảnh từ thư viện " + imageUri);
+                                Glide.with(AddBookActivity.this).load(imageUri).into(binding.imageThumb);
+                            }
+                        }
+                    }
+                }
+            }
+    );
+    //lấy pdf từ thư mục của máy
     private void pdfPickIntent() {
         Log.d(TAG,"pdfPickIntent: starting pdf pick intent");
 

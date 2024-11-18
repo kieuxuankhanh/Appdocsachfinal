@@ -17,7 +17,7 @@
         android:drawableTint="@color/main_color"
         android:hint="Tìm kiếm"
         android:padding="10dp"
-        android:textColorHint="@color/main_color"/>
+        style="@style/TextColorBlack" />
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/booksRCV"
         android:layout_width="match_parent"

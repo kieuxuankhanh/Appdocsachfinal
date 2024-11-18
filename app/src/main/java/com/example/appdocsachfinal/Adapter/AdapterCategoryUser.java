@@ -12,9 +12,9 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.appdocsachfinal.Model.FilterCategoryUser;
+import com.example.appdocsachfinal.Activities.PdfListUserActivity;
+import com.example.appdocsachfinal.Filter.FilterCategoryUser;
 import com.example.appdocsachfinal.Model.ModelCategory;
-import com.example.appdocsachfinal.Activities.PdfListAdminActivity;
 import com.example.appdocsachfinal.databinding.RowCategoryUserBinding;
 
 import java.util.ArrayList;
@@ -53,7 +53,7 @@ public class AdapterCategoryUser extends RecyclerView.Adapter<AdapterCategoryUse
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(context, PdfListAdminActivity.class);
+                Intent intent = new Intent(context, PdfListUserActivity.class);
                 intent.putExtra("categoryId",id);
                 intent.putExtra("categoryTitle",category);
                 context.startActivity(intent);

@@ -1,19 +1,19 @@
-package com.example.appdocsachfinal.Model;
+package com.example.appdocsachfinal.Filter;
 
 import android.widget.Filter;
 
 import com.example.appdocsachfinal.Adapter.AdapterCategory;
-import com.example.appdocsachfinal.Adapter.AdapterCategoryUser;
+import com.example.appdocsachfinal.Model.ModelCategory;
 
 import java.util.ArrayList;
 
-public class FilterCategoryUser extends Filter {
+public class FilterCategory extends Filter {
     ArrayList<ModelCategory> filterList;
-    AdapterCategoryUser adapterCategoryUser;
+    AdapterCategory adapterCategory;
 
-    public FilterCategoryUser(ArrayList<ModelCategory> filterList, AdapterCategoryUser adapterCategoryUser) {
+    public FilterCategory(ArrayList<ModelCategory> filterList, AdapterCategory adapterCategory) {
         this.filterList = filterList;
-        this.adapterCategoryUser = adapterCategoryUser;
+        this.adapterCategory = adapterCategory;
     }
 
     @Override
@@ -40,8 +40,8 @@ public class FilterCategoryUser extends Filter {
 
     @Override
     protected void publishResults(CharSequence constraint, FilterResults results) {
-        adapterCategoryUser.catagoryArrayList = (ArrayList<ModelCategory>)results.values;
-        adapterCategoryUser.notifyDataSetChanged();
+        adapterCategory.catagoryArrayList = (ArrayList<ModelCategory>)results.values;
+        adapterCategory.notifyDataSetChanged();
 
     }
 }

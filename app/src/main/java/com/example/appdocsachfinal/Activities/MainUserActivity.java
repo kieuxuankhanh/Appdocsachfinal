@@ -86,7 +86,6 @@ public class MainUserActivity extends AppCompatActivity {
                     transaction.add(R.id.framelayout, fragment);
                 } else {
                     transaction.replace(R.id.framelayout, fragment);
-                    // Add to backstack only for non-home fragments
                     if (!(fragment instanceof HomeFragmentUser)) {
                         transaction.addToBackStack(null);
                     }

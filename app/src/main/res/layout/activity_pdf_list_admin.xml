@@ -27,7 +27,7 @@
             android:gravity="center_horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Category"
+            android:text="Thể loại"
             android:textSize="27dp"
             android:textStyle="bold"
             android:layout_marginRight="20dp"
@@ -50,8 +50,8 @@
         android:drawableTint="@color/main_color"
         android:padding="10dp"
         android:background="@color/white"
-        android:textColorHint="@color/main_color"
-        />
+        android:textColor="@color/black"
+        android:textColorHint="@color/grey"/>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/Rcvbook"

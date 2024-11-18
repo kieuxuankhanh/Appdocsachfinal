@@ -4,4 +4,7 @@
     <color name="gray">#00000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="main_color">#F0AC49</color>
+    <color name="grey">#aaa</color>
+    <color name="darkgrey">#ff424242</color>
+    <color name="comment">#59000000</color>
 </resources>

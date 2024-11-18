@@ -36,16 +36,16 @@ public class SignActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
         firebaseAuth = FirebaseAuth.getInstance();
         progressDialog = new ProgressDialog(this);
-        progressDialog.setTitle("Doi ty");
+        progressDialog.setTitle("Đợi 1 chút nha!!!");
         progressDialog.setCanceledOnTouchOutside(false);
 
-        binding.btnsign1.setOnClickListener(new View.OnClickListener() {
+        binding.btnsign.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 validateData();
             }
         });
-        binding.btnlogin1.setOnClickListener(new View.OnClickListener() {
+        binding.btnlog.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 finish();
@@ -61,24 +61,24 @@ public class SignActivity extends AppCompatActivity {
         password = binding.edtpass.getText().toString().trim();
         String cPassword = binding.edtpass2.getText().toString().trim();
         if (TextUtils.isEmpty(name)){
-            Toast.makeText(this, "Nhap ten?", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Nhập tên", Toast.LENGTH_SHORT).show();
 
         } else if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            Toast.makeText(this, "Nhap lai email", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Nhập lại email", Toast.LENGTH_SHORT).show();
             
         } else if (TextUtils.isEmpty(password)) {
-            Toast.makeText(this, "Nhap ten?", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Nhập mật khẩu", Toast.LENGTH_SHORT).show();
         } else if (TextUtils.isEmpty(cPassword)) {
-            Toast.makeText(this, "Nhap ten?", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Nhập lại mật khẩu", Toast.LENGTH_SHORT).show();
         } else if (!password.equals(cPassword)) {
-            Toast.makeText(this, "Nhap ten?", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Mật khẩu không trùng khớp", Toast.LENGTH_SHORT).show();
         } else {
                 createUserAccount();
         }
     }
 
     private void createUserAccount() {
-        progressDialog.setMessage("Dang tao ");
+        progressDialog.setMessage("Đang tạo tài khoản!!!");
         progressDialog.show();
 
         firebaseAuth.createUserWithEmailAndPassword(email,password)
@@ -99,7 +99,7 @@ public class SignActivity extends AppCompatActivity {
     }
 
     private void updateUserInfo() {
-        progressDialog.setMessage("Dang luu");
+        progressDialog.setMessage("Đang lưu");
 
         long timestamp = System.currentTimeMillis();
         String uid = firebaseAuth.getUid();
@@ -118,7 +118,7 @@ public class SignActivity extends AppCompatActivity {
                     @Override
                     public void onSuccess(Void unused) {
                         progressDialog.dismiss();
-                        Toast.makeText(SignActivity.this, "dang tao", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(SignActivity.this, "Thành Công", Toast.LENGTH_SHORT).show();
                         startActivity(new Intent(SignActivity.this, MainUserActivity.class));
                         finish();
                     }

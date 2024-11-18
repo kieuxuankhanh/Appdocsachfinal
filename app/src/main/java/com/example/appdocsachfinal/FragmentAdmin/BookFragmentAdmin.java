@@ -12,6 +12,7 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.example.appdocsachfinal.Adapter.AdapterCategory;
 import com.example.appdocsachfinal.Activities.AddCategoryActivity;
@@ -25,6 +26,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 
 public class BookFragmentAdmin extends Fragment {
@@ -82,23 +85,41 @@ public class BookFragmentAdmin extends Fragment {
                     ModelCategory modelCategory = ds.getValue(ModelCategory.class);
                     categoryArrayList.add(modelCategory);
                 }
-                adapterCategory = new AdapterCategory(requireActivity(),categoryArrayList);
+
+                // Sắp xếp danh sách theo tên category
+                Collections.sort(categoryArrayList, new Comparator<ModelCategory>() {
+                    @Override
+                    public int compare(ModelCategory c1, ModelCategory c2) {
+                        return c1.getCategory().compareToIgnoreCase(c2.getCategory());
+                    }
+                });
+
+                // Tùy chọn: đưa category "Khác" xuống cuối danh sách
+                if (categoryArrayList.size() > 1) {
+                    for (int i = 0; i < categoryArrayList.size(); i++) {
+                        if (categoryArrayList.get(i).getCategory().equals("Khác")) {
+                            ModelCategory other = categoryArrayList.remove(i);
+                            categoryArrayList.add(other);
+                            break;
+                        }
+                    }
+                }
+
+                adapterCategory = new AdapterCategory(requireActivity(), categoryArrayList);
                 binding.catagoryRecycleview.setAdapter(adapterCategory);
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-
+                Toast.makeText(requireActivity(), "Lỗi: " + error.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = FragmentBookAdminBinding.inflate(inflater,container,false);
-        // Inflate the layout for this fragment
         return binding.getRoot();
     }
 }

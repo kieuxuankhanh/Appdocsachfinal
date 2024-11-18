@@ -1,6 +1,8 @@
 package com.example.appdocsachfinal.Activities;
 
 
+import static java.security.AccessController.getContext;
+
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -15,6 +17,8 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
+import com.example.appdocsachfinal.Adapter.AdapterCommentDetails;
+import com.example.appdocsachfinal.Model.ModelComment;
 import com.example.appdocsachfinal.MyApplication;
 import com.example.appdocsachfinal.R;
 import com.example.appdocsachfinal.databinding.ActivityPdfDetailBinding;
@@ -25,6 +29,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
+
 
 public class PdfDetailActivity extends AppCompatActivity {
     private static final String TAG_DOWNLOAD = "DOWNLOAD_TAG";
@@ -32,6 +38,10 @@ public class PdfDetailActivity extends AppCompatActivity {
     String bookId,bookTitle,bookUrl;
     boolean isInMyFavorite = false;
     private FirebaseAuth firebaseAuth;
+    private boolean isDataLoading = false;
+    private boolean isAdded = false;
+    private ArrayList<ModelComment> commentArrayList;
+    private AdapterCommentDetails adapterCommentDetails;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +57,8 @@ public class PdfDetailActivity extends AppCompatActivity {
             checkIsFavorite();
         }
         loadBookDetails();
+        loadComments();
+        setupSwipeRefresh();
         MyApplication.incrementBookViewCount(bookId);
 
         binding.btnback.setOnClickListener(new View.OnClickListener() {
@@ -88,6 +100,57 @@ public class PdfDetailActivity extends AppCompatActivity {
                 }
             }
         });
+        binding.btncomment.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intentComment = new Intent(PdfDetailActivity.this, CommentActivity.class);
+                intentComment.putExtra("bookId",bookId);
+                startActivity(intentComment);
+            }
+        });
+    }
+
+    private void loadComments() {
+        commentArrayList = new ArrayList<>();
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Books");
+        ref.child(bookId).child("Comments")
+                .addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        commentArrayList.clear();
+                        for (DataSnapshot ds : snapshot.getChildren()){
+                            ModelComment modelComment = ds.getValue(ModelComment.class);
+                            commentArrayList.add(modelComment);
+                        }
+                        adapterCommentDetails = new AdapterCommentDetails(PdfDetailActivity.this, commentArrayList);
+                        binding.Rcvcomment.setAdapter(adapterCommentDetails);
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
+    }
+
+    private void setupSwipeRefresh() {
+        if (binding != null && binding.swipeRefreshLayout != null) {
+            binding.swipeRefreshLayout.setOnRefreshListener(() -> {
+                if (!isDataLoading) {
+                    loadAllData();
+                }
+                binding.swipeRefreshLayout.setRefreshing(false);
+            });
+        }
+    }
+    private void loadAllData() {
+        if (getContext() == null) return;
+
+        isDataLoading = true;
+        loadBookDetails();
+        checkIsFavorite();
+        loadComments();
+        isDataLoading = false;
     }
 
     private final ActivityResultLauncher<String> requestPermissionLauncher =
@@ -115,19 +178,14 @@ public class PdfDetailActivity extends AppCompatActivity {
                         bookUrl = ""+snapshot.child("url").getValue();
                         String timestamp = ""+snapshot.child("timestamp").getValue();
                         binding.btnsave.setVisibility(View.VISIBLE);
+                        String imageThumb = ""+snapshot.child("imageThumb").getValue();
 
                         String date = MyApplication.formatTimestamp(Long.parseLong(timestamp));
                         MyApplication.loadCategory(
                                 ""+categoryId,
                                 binding.txtcategory
                         );
-                        MyApplication.loadPdfFromUrlSinglePage(
-                                ""+bookUrl,
-                                ""+bookTitle,
-                                binding.pdfView,
-                                binding.progressBar,
-                                binding.txtpage
-                        );
+                        MyApplication.loadImageFromUrl(""+bookId, binding.ImageThumb,binding.progressBar);
                         MyApplication.LoadPdfSize(
                                 ""+bookUrl,
                                 ""+bookTitle,
@@ -138,6 +196,7 @@ public class PdfDetailActivity extends AppCompatActivity {
                         binding.txtviews.setText(viewsCount.replace("null","N/A"));
                         binding.txtdownload.setText(downloadsCount.replace("null","N/A"));
                         binding.txtdate.setText(date);
+
                     }
 
                     @Override
@@ -146,6 +205,7 @@ public class PdfDetailActivity extends AppCompatActivity {
                     }
                 });
     }
+    //kiểm tra xem người dùng có bấm yêu thích không
     private void checkIsFavorite(){
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users");
         reference.child(firebaseAuth.getUid()).child("Favorites").child(bookId)

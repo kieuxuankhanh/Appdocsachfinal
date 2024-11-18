@@ -1,6 +1,7 @@
 {
   "project_info": {
     "project_number": "1087337655376",
+    "firebase_url": "https://appdocsachfinal-default-rtdb.firebaseio.com",
     "project_id": "appdocsachfinal",
     "storage_bucket": "appdocsachfinal.appspot.com"
   },
@@ -12,7 +13,20 @@
           "package_name": "com.example.appdocsachfinal"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "1087337655376-u3hvprh389m8j5cm51bidop1tf5sangh.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.appdocsachfinal",
+            "certificate_hash": "c5a941d848d2c9be90c64ff5dc6aca591395ff6e"
+          }
+        },
+        {
+          "client_id": "1087337655376-rclkafbbptmsonqon6renpksgcmeefaq.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyAviFvQILJH9WufnuN7UyoiDFG_faOEV60"
@@ -20,7 +34,12 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1087337655376-rclkafbbptmsonqon6renpksgcmeefaq.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }

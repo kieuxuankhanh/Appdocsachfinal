@@ -1,217 +1,260 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.swiperefreshlayout.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:id="@+id/swipeRefreshLayout"
     tools:context=".Activities.PdfDetailActivity">
+
     <RelativeLayout
-        android:id="@+id/toolbarRLV"
-        android:padding="10dp"
         android:layout_width="match_parent"
-        android:layout_height="?actionBarSize"
-        android:background="@drawable/bg_text"
-        >
-        <ImageButton
-            android:id="@+id/btnback"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="5dp"
-            android:layout_alignParentStart="true"
-            android:src="@drawable/sharp_arrow_back_24"
-            android:background="@android:color/transparent"
-            android:backgroundTint="@color/main_color"/>
-        <TextView
-            android:id="@+id/txtsubTitle"
-            android:gravity="center_horizontal"
+        android:layout_height="match_parent">
+        <RelativeLayout
+            android:id="@+id/toolbarRLV"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Thông tin sách"
-            android:textSize="27dp"
-            android:textStyle="bold"
-            android:layout_marginRight="20dp"
-            android:layout_centerInParent="true"
-            android:textColor="@color/main_color"
-            android:layout_toEndOf="@+id/btnback"/>
+            android:layout_height="?actionBarSize"
+            android:background="@drawable/bg_text"
+            android:elevation="4dp"
+            android:padding="10dp">
 
-    </RelativeLayout>
-    <ScrollView
-        android:id="@+id/toolScroll"
-        android:layout_below="@+id/toolbarRLV"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:padding="10dp">
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-                <RelativeLayout
-                    android:id="@+id/pdfRL"
-                    android:layout_width="130dp"
-                    android:layout_height="170dp"
-                    android:layout_marginEnd="5dp"
-                    android:background="@color/main_color">
-                    <com.github.barteksc.pdfviewer.PDFView
-                        android:id="@+id/pdfView"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"/>
-                    <ProgressBar
-                        android:id="@+id/progressBar"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"/>
-
-                </RelativeLayout>
-                <TextView
-                    android:id="@+id/txttitle"
-                    style="@style/TextAppearance.MaterialComponents.Headline6"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_toEndOf="@+id/pdfRL"
-                    android:text="Tiêu đề"/>
-                <TableLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/txttitle"
-                    android:layout_toEndOf="@id/pdfRL">
-                    <TableRow>
-                    <TextView
-                        android:id="@+id/txtcategoryLabel"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="5dp"
-                        android:text="Thể loại"/>
-                    <TextView
-                        android:id="@+id/txtcategory"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="5dp"
-                        android:text="N/A"/>
-                </TableRow>
-                    <TableRow android:layout_marginTop="4dp">
-                        <TextView
-                            android:id="@+id/txtdateLabel"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginEnd="5dp"
-                            android:text="Ngày"/>
-                        <TextView
-                            android:id="@+id/txtdate"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginEnd="5dp"
-                            android:text="N/A"/>
-                    </TableRow>
-                    <TableRow android:layout_marginTop="4dp">
-                        <TextView
-                            android:id="@+id/txtsizeLabel"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginEnd="5dp"
-                            android:text="Kích cỡ"/>
-                        <TextView
-                            android:id="@+id/txtsize"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginEnd="5dp"
-                            android:text="N/A"/>
-                    </TableRow>
-                    <TableRow android:layout_marginTop="4dp">
-                        <TextView
-                            android:id="@+id/txtviewsLabel"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginEnd="5dp"
-                            android:text="Lượt xem"/>
-                        <TextView
-                            android:id="@+id/txtviews"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginEnd="5dp"
-                            android:text="N/A"/>
-                    </TableRow>
-                    <TableRow android:layout_marginTop="4dp">
-                        <TextView
-                            android:id="@+id/txtownloadLabel"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginEnd="5dp"
-                            android:text="Lượt tải"/>
-                        <TextView
-                            android:id="@+id/txtdownload"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginEnd="5dp"
-                            android:text="N/A"/>
-                    </TableRow>
-                    <TableRow android:layout_marginTop="4dp">
-                        <TextView
-                            android:id="@+id/txtpagesLabel"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginEnd="5dp"
-                            android:text="Số trang"/>
-                        <TextView
-                            android:id="@+id/txtpage"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginEnd="5dp"
-                            android:text="N/A"/>
-                    </TableRow>
-                </TableLayout>
-
-            </RelativeLayout>
+            <ImageButton
+                android:id="@+id/btnback"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_alignParentStart="true"
+                android:layout_centerVertical="true"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="Back"
+                android:padding="12dp"
+                android:src="@drawable/sharp_arrow_back_24"
+                app:tint="@color/main_color" />
 
             <TextView
-                android:id="@+id/txtmota"
+                android:id="@+id/txtsubTitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:text="Mo ta cua sach"
-                android:textColor="@color/black"
-                />
-        </LinearLayout>
-    </ScrollView>
+                android:layout_centerInParent="true"
+                android:layout_marginEnd="48dp"
+                android:layout_toEndOf="@+id/btnback"
+                android:fontFamily="sans-serif-medium"
+                android:gravity="center"
+                android:text="Thông tin sách"
+                android:textColor="@color/main_color"
+                android:textSize="24sp" />
 
-    <LinearLayout
-        android:id="@+id/readRLV"
-        android:layout_width="match_parent"
-        android:layout_height="70dp"
-        android:background="#59000000"
-        android:layout_alignParentBottom="true"
-        android:orientation="horizontal"
-        >
-        <Button
-            app:backgroundTint="@null"
-            style="@style/Widget.AppCompat.Button.Borderless"
-            android:layout_gravity="center"
-            android:id="@+id/btnread"
-            android:layout_width="240dp"
-            android:layout_height="wrap_content"
-            android:text="Đọc sách"
-            android:layout_margin="5dp"
-            android:textAllCaps="true"
-            android:textStyle="bold"
-            android:background="@drawable/button1"
-            android:backgroundTint="@color/main_color"
-            />
-        <Button
-            android:id="@+id/btnsave"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:drawableEnd="@drawable/sharp_download_2_24"
-            android:layout_gravity="center"
-            android:background="@color/gray" />
-        <Button
-            android:id="@+id/btnfavor"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:drawableEnd="@drawable/baseline_favorite_white"
-            android:background="@color/gray" />
-    </LinearLayout>
-</RelativeLayout>
+        </RelativeLayout>
+
+        <androidx.core.widget.NestedScrollView
+            android:id="@+id/toolScroll"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@id/readRLV"
+            android:layout_below="@+id/toolbarRLV"
+            android:clipToPadding="false"
+            android:padding="16dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <androidx.cardview.widget.CardView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:elevation="8dp"
+                            app:cardCornerRadius="12dp">
+
+                            <RelativeLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:padding="16dp">
+
+                                <com.google.android.material.card.MaterialCardView
+                                    android:id="@+id/pdfRL"
+                                    android:layout_width="140dp"
+                                    android:layout_height="190dp"
+                                    app:cardCornerRadius="8dp"
+                                    app:cardElevation="0dp"
+                                    android:layout_marginRight="10dp"
+                                    app:layout_constraintBottom_toBottomOf="parent"
+                                    app:layout_constraintStart_toStartOf="parent"
+                                    app:layout_constraintTop_toTopOf="parent">
+
+                                    <ImageView
+                                        android:id="@+id/ImageThumb"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="match_parent"
+                                        android:scaleType="centerCrop"
+                                        android:adjustViewBounds="true"/>
+
+                                    <ProgressBar
+                                        android:id="@+id/progressBar"
+                                        android:layout_width="32dp"
+                                        android:layout_height="32dp"
+                                        android:layout_gravity="center"
+                                        android:indeterminateTint="@color/main_color" />
+
+                                </com.google.android.material.card.MaterialCardView>
+
+                                <TextView
+                                    android:id="@+id/txttitle"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_toEndOf="@+id/pdfRL"
+                                    android:fontFamily="sans-serif-medium"
+                                    android:text="Tiêu đề"
+                                    android:textColor="@color/black"
+                                    android:textSize="20sp"
+                                    android:textStyle="bold" />
+
+                                <TableLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_below="@id/txttitle"
+                                    android:layout_marginTop="12dp"
+                                    android:layout_toEndOf="@id/pdfRL">
+
+
+                                    <TableRow android:layout_marginBottom="8dp">
+                                        <TextView
+                                            android:text="Thể loại" />
+                                        <TextView
+                                            android:id="@+id/txtcategory"
+                                            android:layout_marginLeft="4dp"
+                                            android:text="N/A" />
+                                    </TableRow>
+
+                                    <TableRow android:layout_marginBottom="8dp">
+                                        <TextView
+                                            android:text="Ngày" />
+                                        <TextView
+                                            android:id="@+id/txtdate"
+                                            android:layout_marginLeft="4dp"
+                                            android:text="N/A" />
+                                    </TableRow>
+
+                                    <TableRow android:layout_marginBottom="8dp">
+                                        <TextView
+                                            android:text="Kích cỡ" />
+                                        <TextView
+                                            android:id="@+id/txtsize"
+                                            android:layout_marginLeft="4dp"
+                                            android:text="N/A" />
+                                    </TableRow>
+
+                                    <TableRow android:layout_marginBottom="8dp">
+                                        <TextView
+                                            android:text="Lượt xem" />
+                                        <TextView
+                                            android:id="@+id/txtviews"
+                                            android:layout_marginLeft="4dp"
+                                            android:text="N/A" />
+                                    </TableRow>
+
+                                    <TableRow android:layout_marginBottom="8dp">
+                                        <TextView
+                                            android:text="Lượt tải" />
+                                        <TextView
+                                            android:id="@+id/txtdownload"
+                                            android:layout_marginLeft="4dp"
+                                            android:text="N/A" />
+                                    </TableRow>
+
+                                </TableLayout>
+                            </RelativeLayout>
+                        </androidx.cardview.widget.CardView>
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Nội dung"
+                            android:layout_marginTop="16dp"
+                            style="@style/TextAppearance.MaterialComponents.Headline6"
+                            />
+                        <androidx.cardview.widget.CardView
+                            android:id="@+id/cardviewmota"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            app:cardCornerRadius="12dp"
+                            app:cardElevation="4dp">
+                            <TextView
+                                android:id="@+id/txtmota"
+                                android:layout_marginTop="10dp"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:padding="16dp"
+                                style="@style/TextColorBlack"
+                                android:text="Mô tả của sách"
+                                android:textColor="@color/black"
+                                android:textSize="16sp" />
+                        </androidx.cardview.widget.CardView>
+                        <TextView
+                            android:layout_marginTop="16dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Bình luận"
+                            style="@style/TextAppearance.MaterialComponents.Headline6"
+                            />
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/Rcvcomment"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/cardviewmota"
+                            android:scrollbars="none"
+                            android:nestedScrollingEnabled="false"
+                            android:orientation="horizontal"
+                            app:cardBackgroundColor="#59000000"
+                            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                            tools:listitem="@layout/row_comments_detail"/>
+                    </LinearLayout>
+        </androidx.core.widget.NestedScrollView>
+
+
+        <LinearLayout
+            android:id="@+id/readRLV"
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
+            android:background="#59000000"
+            android:layout_alignParentBottom="true"
+            android:orientation="horizontal"
+            >
+            <Button
+                app:backgroundTint="@null"
+                style="@style/Widget.AppCompat.Button.Borderless"
+                android:layout_gravity="center"
+                android:id="@+id/btnread"
+                android:layout_width="240dp"
+                android:layout_height="wrap_content"
+                android:text="Đọc sách"
+                android:layout_margin="5dp"
+                android:textAllCaps="true"
+                android:textStyle="bold"
+                android:background="@drawable/button1"
+                android:backgroundTint="@color/main_color"
+                />
+            <ImageButton
+                android:id="@+id/btnsave"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/sharp_download_2_24"
+                android:layout_gravity="center"
+                android:layout_marginLeft="5dp"
+                android:background="@color/gray" />
+            <Button
+                android:id="@+id/btnfavor"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:drawableEnd="@drawable/baseline_favorite_white"
+                android:background="@color/gray" />
+            <ImageButton
+                android:id="@+id/btncomment"
+                android:layout_marginRight="5dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:src="@drawable/sharp_comment_24"
+                android:background="@color/gray" />
+        </LinearLayout>
+    </RelativeLayout>
+</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

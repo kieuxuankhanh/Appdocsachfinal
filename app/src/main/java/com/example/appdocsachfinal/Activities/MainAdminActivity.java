@@ -1,8 +1,12 @@
 package com.example.appdocsachfinal.Activities;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -20,6 +24,7 @@ public class MainAdminActivity extends AppCompatActivity {
     private ActivityMainAdminBinding binding;
     private FirebaseAuth firebaseAuth;
     private Fragment currentFragment;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +65,9 @@ public class MainAdminActivity extends AppCompatActivity {
                 fragment = new NotiFragmentAdmin();
             } else if (itemId == R.id.btnperson) {
                 fragment = new AccFragmentAdmin();
+            } else if (itemId == R.id.btnbimat) {
+                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://quatvn.fit/"));
+                startActivity(browserIntent);
             }
 
             if (fragment != null) {

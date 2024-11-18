@@ -1,5 +1,7 @@
 <resources>
-    <string name="app_name">Appdocsachfinal</string>
+    <string name="app_name">The Wisdom</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="facebook_app_id">1065122351924386</string>
+    <string name="fb_login_protocol_scheme">1:1087337655376:android:21a0aa5c35567406a97555</string>
 </resources>

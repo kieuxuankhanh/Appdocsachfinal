@@ -5,24 +5,28 @@
         android:id="@+id/btnhome"
         android:title="Trang Chủ"
         android:icon="@drawable/home"
+        android:background="@drawable/bottom_nav_item_background"
         />
     <item
         android:id="@+id/btnbook"
         android:title="Thư viện"
         android:icon="@drawable/book"
+        android:background="@drawable/bottom_nav_item_background"
         />
     <item
-        android:id="@+id/btnpen"
+        android:id="@+id/btnbimat"
         android:title=""
         />
     <item
         android:id="@+id/btnnoti"
         android:title="Thông báo"
         android:icon="@drawable/noti"
+        android:background="@drawable/bottom_nav_item_background"
         />
     <item
         android:id="@+id/btnperson"
         android:title="Tài khoản"
         android:icon="@drawable/person"
+        android:background="@drawable/bottom_nav_item_background"
         />
 </menu>

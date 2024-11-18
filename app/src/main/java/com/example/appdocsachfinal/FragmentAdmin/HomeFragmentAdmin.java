@@ -11,13 +11,17 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.denzcoskun.imageslider.constants.ScaleTypes;
+import com.denzcoskun.imageslider.interfaces.ItemChangeListener;
+import com.denzcoskun.imageslider.interfaces.ItemClickListener;
 import com.denzcoskun.imageslider.models.SlideModel;
 import com.example.appdocsachfinal.Activities.DashBoardUserActivity;
+import com.example.appdocsachfinal.Activities.PdfDetailActivity;
 import com.example.appdocsachfinal.Adapter.AdapterCategoryHome;
 import com.example.appdocsachfinal.Adapter.AdapterPdfListUser;
 import com.example.appdocsachfinal.Model.ModelCategory;
 import com.example.appdocsachfinal.Model.ModelListPdf;
 import com.example.appdocsachfinal.databinding.FragmentHomeAdminBinding;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.*;
 
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -44,6 +48,8 @@ public class HomeFragmentAdmin extends Fragment {
     private DatabaseReference categoriesRef;
     private DatabaseReference imagesRef;
 
+    private FirebaseAuth firebaseAuth;
+
     private boolean isDataLoading = false;
     private boolean isAdded = false;
 
@@ -59,7 +65,7 @@ public class HomeFragmentAdmin extends Fragment {
             FirebaseDatabase database = FirebaseDatabase.getInstance();
             booksRef = database.getReference("Books");
             categoriesRef = database.getReference("Categories");
-            imagesRef = database.getReference("image");
+            imagesRef = database.getReference("Books");
         } catch (Exception e) {
             Log.e(TAG, "Failed to initialize Firebase references: " + e.getMessage());
             safeShowToast("Không thể kết nối đến cơ sở dữ liệu");
@@ -70,6 +76,7 @@ public class HomeFragmentAdmin extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         try {
+            firebaseAuth = FirebaseAuth.getInstance();
             binding = FragmentHomeAdminBinding.inflate(inflater, container, false);
             return initializeView();
         } catch (Exception e) {
@@ -90,6 +97,7 @@ public class HomeFragmentAdmin extends Fragment {
         setupClickListeners();
         setupSwipeRefresh();
         initializeRecyclerViews();
+        loadUserInfo();
 
         if (!isDataLoading) {
             loadAllData();
@@ -117,13 +125,14 @@ public class HomeFragmentAdmin extends Fragment {
 
     private void setupClickListeners() {
         if (binding != null) {
-            binding.edtmore2.setOnClickListener(v -> safeNavigateToMostDownloaded());
+            binding.edtdecu.setOnClickListener(v -> safeNavigateToMostDownloaded());
+            binding.edtdocnhieu.setOnClickListener(v -> safeNavigateToMostDownloaded());
             binding.buttonkhampha.setOnClickListener(v -> safeNavigateToDashboard());
         }
     }
 
     private void setupSwipeRefresh() {
-        if (binding != null && binding.swipeRefreshLayout != null) {
+            if (binding != null && binding.swipeRefreshLayout != null) {
             binding.swipeRefreshLayout.setOnRefreshListener(() -> {
                 if (!isDataLoading) {
                     loadAllData();
@@ -177,35 +186,68 @@ public class HomeFragmentAdmin extends Fragment {
     }
 
     private void loadImageSlider() {
-        if (imagesRef == null || !isAdded()) return;
+        try {
+            if (imagesRef == null || !isAdded() || binding == null) return;
 
-        final List<SlideModel> imageList = new ArrayList<>();
-        imagesRef.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                try {
-                    if (!isAdded() || binding == null) return;
+            final List<SlideModel> imageList = new ArrayList<>();
+            final List<String> bookIdList = new ArrayList<>();
 
-                    imageList.clear();
-                    for (DataSnapshot ds : snapshot.getChildren()) {
-                        String imageUrl = ds.child("url").getValue(String.class);
-                        if (imageUrl != null) {
-                            imageList.add(new SlideModel(imageUrl, ScaleTypes.FIT));
+            imagesRef.limitToFirst(8).addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    try {
+                        if (!isAdded() || binding == null) return;
+
+                        imageList.clear();
+                        bookIdList.clear();
+                        int count = 0;
+                        for (DataSnapshot ds : snapshot.getChildren()) {
+                            if (count >= 5) break;
+
+                            String imageUrl = ds.child("imageThumb").getValue(String.class);
+                            String bookId = ds.child("id").getValue(String.class);
+
+                            if (imageUrl != null && bookId != null) {
+                                imageList.add(new SlideModel(imageUrl, ScaleTypes.FIT));
+                                bookIdList.add(bookId);
+                                count++;
+                            }
                         }
-                    }
-                    if (!imageList.isEmpty() && binding.imageSlider != null) {
-                        binding.imageSlider.setImageList(imageList, ScaleTypes.FIT);
-                    }
-                } catch (Exception e) {
-                    Log.e(TAG, "Error loading image slider: " + e.getMessage());
-                }
-            }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                handleDatabaseError(error);
-            }
-        });
+                        if (!imageList.isEmpty() && binding.imageSlider != null) {
+                            binding.imageSlider.setImageList(imageList, ScaleTypes.FIT);
+
+                            // Xử lý click với interface đầy đủ
+                            binding.imageSlider.setItemClickListener(new ItemClickListener() {
+                                @Override
+                                public void doubleClick(int i) {
+
+                                }
+
+                                @Override
+                                public void onItemSelected(int position) {
+                                    if (position < bookIdList.size()) {
+                                        String bookId = bookIdList.get(position);
+                                        Intent intent = new Intent(requireActivity(), PdfDetailActivity.class);
+                                        intent.putExtra("bookId", bookId);
+                                        startActivity(intent);
+                                    }
+                                }
+                            });
+                        }
+                    } catch (Exception e) {
+                        Log.e(TAG, "Error processing image slider data: " + e.getMessage());
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+                    handleDatabaseError(error);
+                }
+            });
+        } catch (Exception e) {
+            Log.e(TAG, "Error loading image slider: " + e.getMessage());
+        }
     }
 
     private void loadAllBooks() {
@@ -249,7 +291,7 @@ public class HomeFragmentAdmin extends Fragment {
     private void loadMostDownloadedBooks() {
         if (booksRef == null || !isAdded()) return;
 
-        booksRef.orderByChild("downloadsCount")
+        booksRef.orderByChild("viewsCount")
                 .limitToLast(MAX_DOWNLOADED_BOOKS)
                 .addValueEventListener(new ValueEventListener() {
                     @Override
@@ -287,40 +329,57 @@ public class HomeFragmentAdmin extends Fragment {
     }
 
     private void loadCategories() {
-        if (categoriesRef == null || !isAdded()) return;
+        try {
+            if (categoriesRef == null || !isAdded()) return;
 
-        categoriesRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                try {
-                    if (!isAdded() || binding == null) return;
+            categoriesRef.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    try {
+                        if (!isAdded() || binding == null) return;
 
-                    ArrayList<ModelCategory> categories = new ArrayList<>();
-                    for (DataSnapshot ds : snapshot.getChildren()) {
-                        ModelCategory model = ds.getValue(ModelCategory.class);
-                        if (model != null) {
-                            categories.add(model);
+                        ArrayList<ModelCategory> categories = new ArrayList<>();
+                        ModelCategory khacCategory = null;
+
+                        for (DataSnapshot ds : snapshot.getChildren()) {
+                            ModelCategory model = ds.getValue(ModelCategory.class);
+                            if (model != null) {
+                                if (model.getCategory().equals("Khác")) {
+                                    khacCategory = model;
+                                } else {
+                                    categories.add(model);
+                                }
+                            }
                         }
+                        if (khacCategory != null) {
+                            categories.add(khacCategory);
+                        }
+
+                        updateCategoriesAdapter(categories);
+                    } catch (Exception e) {
+                        Log.e(TAG, "Error processing categories data: " + e.getMessage());
                     }
-
-                    updateCategoriesAdapter(categories);
-                } catch (Exception e) {
-                    Log.e(TAG, "Error loading categories: " + e.getMessage());
                 }
-            }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                handleDatabaseError(error);
-            }
-        });
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+                    handleDatabaseError(error);
+                }
+            });
+        } catch (Exception e) {
+            Log.e(TAG, "Error loading categories: " + e.getMessage());
+        }
     }
 
     private void updateCategoriesAdapter(ArrayList<ModelCategory> categories) {
-        if (getContext() == null || binding == null) return;
+        try {
+            if (getContext() == null || binding == null || !isAdded()) return;
 
-        categoryAdapter = new AdapterCategoryHome(getContext(), categories);
-        binding.theloaiRCV.setAdapter(categoryAdapter);
+            categoryAdapter = new AdapterCategoryHome(getContext(), categories);
+            binding.theloaiRCV.setAdapter(categoryAdapter);
+        } catch (Exception e) {
+            Log.e(TAG, "Error updating categories adapter: " + e.getMessage());
+        }
     }
 
     private void safeNavigateToMostDownloaded() {
@@ -373,6 +432,46 @@ public class HomeFragmentAdmin extends Fragment {
             categoryAdapter = null;
         } catch (Exception e) {
             Log.e(TAG, "Error in onDestroyView: " + e.getMessage());
+        }
+    }
+    private void loadUserInfo() {
+        if (firebaseAuth.getUid() == null) {
+            Log.e(TAG, "User ID is null");
+            return;
+        }
+
+        try {
+            DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users");
+            reference.child(firebaseAuth.getUid())
+                    .addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            try {
+                                if (snapshot.exists()) {
+                                    String name = snapshot.child("name").exists() ?
+                                            snapshot.child("name").getValue().toString() : "";
+                                    if (!name.isEmpty()) {
+                                        binding.txtname.setText(name);
+                                        binding.txtname.setVisibility(View.VISIBLE);
+                                    } else {
+                                        binding.txtname.setVisibility(View.GONE);
+                                    }
+
+                                } else {
+                                    Log.e(TAG, "User data does not exist in database");
+                                }
+                            } catch (Exception e) {
+                                Log.e(TAG, "Error processing user data: " + e.getMessage());
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+                            Log.e(TAG, "Database error: " + error.getMessage());
+                        }
+                    });
+        } catch (Exception e) {
+            Log.e(TAG, "Error loading user info: " + e.getMessage());
         }
     }
 }

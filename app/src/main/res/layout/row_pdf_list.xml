@@ -17,23 +17,31 @@
         android:layout_height="140dp"
         >
 
-        <androidx.cardview.widget.CardView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@drawable/bg_indicator"
-            app:cardCornerRadius="15dp"
-            app:cardElevation="4dp">
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/pdfRL"
+            android:layout_width="110dp"
+            android:layout_height="140dp"
+            app:cardCornerRadius="8dp"
+            app:cardElevation="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
-            <com.github.barteksc.pdfviewer.PDFView
-                android:id="@+id/pdfView"
+            <ImageView
+                android:id="@+id/ImageThumb"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+                android:layout_height="match_parent"
+                android:scaleType="centerCrop"
+                android:adjustViewBounds="true"/>
 
             <ProgressBar
                 android:id="@+id/progressBar"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
-        </androidx.cardview.widget.CardView>
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_gravity="center"
+                android:indeterminateTint="@color/main_color" />
+
+        </com.google.android.material.card.MaterialCardView>
     </RelativeLayout>
     <TextView
         android:gravity="center"
@@ -44,7 +52,7 @@
         android:layout_below="@+id/bookRL"
         android:text="truyen tranh"
         android:textSize="14sp"
-        android:textColor="#000"
+        style="@style/TextColorBlack"
         android:maxLines="2"
         android:ellipsize="end"/>
 </RelativeLayout>

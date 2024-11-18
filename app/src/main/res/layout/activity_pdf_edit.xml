@@ -4,59 +4,65 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".Activities.PdfEditActivity">
+    tools:context=".FragmentAdmin.BookFragmentAdmin">
+
     <RelativeLayout
+        android:id="@+id/header_layout"
         android:layout_width="match_parent"
         android:layout_height="300dp"
-        android:layout_marginTop="-40dp"
-        android:background="@drawable/bg_book"
-        >
+        android:layout_marginTop="-45dp"
+        android:background="@drawable/bg_book">
 
         <ImageButton
             android:id="@+id/btnback"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="50dp"
-            android:layout_marginLeft="10dp"
+            android:layout_marginStart="10dp"
             android:background="@color/main_color"
             android:padding="10dp"
             android:layout_alignParentStart="true"
-            android:src="@drawable/back" />
+            android:src="@drawable/back"
+            android:contentDescription="Back button" />
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/logoLB"
             android:layout_width="150dp"
             android:layout_height="150dp"
-            android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true"
+            android:layout_centerInParent="true"
             android:src="@drawable/photologo"/>
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Chỉnh sửa sách"
+            android:text="Sửa Sách"
             android:layout_marginTop="5dp"
             android:layout_below="@+id/logoLB"
-            android:textSize="24dp"
+            android:textSize="24sp"
             android:textStyle="bold"
             android:textColor="@color/white"
             android:gravity="center_horizontal"/>
 
     </RelativeLayout>
-    <ScrollView
-        android:layout_marginTop="225dp"
+
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent"
+        android:layout_marginTop="210dp"
+        android:fillViewport="true">
+
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content"
+            android:padding="16dp">
+
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/txttenbook"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:hintEnabled="false"
                 android:layout_marginStart="30dp"
-                android:layout_marginEnd="30dp"
-               >
+                android:layout_marginEnd="30dp">
+
                 <EditText
                     android:id="@+id/edttenbook"
                     android:layout_width="match_parent"
@@ -67,13 +73,14 @@
                     android:drawablePadding="10dp"
                     android:hint="Tên Sách"
                     android:textSize="16sp"
-                    android:inputType="textPersonName|textCapWords"
+                    android:inputType="textCapSentences"
                     android:padding="10dp"
                     android:textColorHint="@color/main_color"
                     android:drawableTint="@color/main_color"
                     android:textColor="@color/black"/>
 
             </com.google.android.material.textfield.TextInputLayout>
+
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/txtmota"
                 android:layout_width="match_parent"
@@ -81,25 +88,30 @@
                 app:hintEnabled="false"
                 android:layout_marginStart="30dp"
                 android:layout_marginEnd="30dp"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="10dp"
                 android:layout_below="@+id/txttenbook">
+
                 <EditText
                     android:id="@+id/edtmota"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:minHeight="150dp"
+                    android:maxHeight="250dp"
                     android:background="@drawable/bg_text"
                     android:backgroundTint="@color/white"
-                    android:drawableStart="@drawable/sharp_picture_as_pdf_24"
+                    android:drawableLeft="@drawable/sharp_picture_as_pdf_24"
                     android:drawablePadding="10dp"
                     android:hint="Mô tả"
                     android:textSize="16sp"
-                    android:inputType="textPersonName|textCapWords"
+                    android:inputType="textMultiLine|textCapSentences"
+                    android:gravity="top|start"
                     android:padding="10dp"
                     android:textColorHint="@color/main_color"
                     android:drawableTint="@color/main_color"
                     android:textColor="@color/black"/>
 
             </com.google.android.material.textfield.TextInputLayout>
+
             <TextView
                 android:id="@+id/edttheloai"
                 android:layout_width="match_parent"
@@ -107,7 +119,7 @@
                 android:layout_below="@+id/txtmota"
                 android:layout_marginStart="30dp"
                 android:layout_marginEnd="30dp"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="10dp"
                 android:background="@drawable/bg_text"
                 android:drawableStart="@drawable/book"
                 android:drawableTint="@color/main_color"
@@ -117,24 +129,52 @@
                 android:hint="Thể loại"
                 android:padding="10dp"
                 android:textColorHint="@color/main_color"
-                android:textSize="16sp"
-                android:textColor="@color/black"
-                />
-            <Button
-                android:id="@+id/btnupdate"
-                android:backgroundTint="@color/main_color"
-                app:backgroundTint="@null"
-                style="@style/Widget.AppCompat.Button.Borderless"
+                android:textSize="16sp" />
+            <TextView
+                android:id="@+id/txtanhbia"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/button1"
+                android:text="Ảnh bìa"
+                style="@style/TextAppearance.MaterialComponents.Headline6"
+                android:textColor="@color/main_color"
                 android:layout_marginStart="30dp"
                 android:layout_marginEnd="30dp"
-                android:layout_marginTop="20dp"
-                android:text="Sửa"
-                android:textStyle="bold"
+                android:layout_marginTop="10dp"
+                android:drawableLeft="@drawable/baseline_camera_alt_24"
+                android:drawablePadding="10dp"
                 android:layout_below="@+id/edttheloai"/>
 
+            <androidx.cardview.widget.CardView
+                android:id="@+id/CVImage"
+                android:layout_below="@+id/txtanhbia"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_marginStart="30dp"
+                android:layout_marginEnd="30dp"
+                app:cardCornerRadius="10dp">
+                <ImageView
+                    android:id="@+id/image_thumb"
+                    android:layout_width="match_parent"
+                    android:layout_height="200dp"
+                    />
+            </androidx.cardview.widget.CardView>
+
+            <Button
+                android:id="@+id/btnupdate"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/CVImage"
+                android:layout_marginStart="30dp"
+                android:layout_marginEnd="30dp"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/button1"
+                android:backgroundTint="@color/main_color"
+                android:text="Sửa"
+                android:textStyle="bold"
+                style="@style/Widget.AppCompat.Button.Borderless"
+                app:backgroundTint="@null"/>
+
         </RelativeLayout>
-    </ScrollView>
+    </androidx.core.widget.NestedScrollView>
 </RelativeLayout>

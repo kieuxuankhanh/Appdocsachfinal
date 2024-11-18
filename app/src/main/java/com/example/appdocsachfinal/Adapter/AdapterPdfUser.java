@@ -8,12 +8,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Filter;
 import android.widget.Filterable;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-import com.example.appdocsachfinal.Model.FilterPdfUser;
+import com.example.appdocsachfinal.Filter.FilterPdfUser;
 import com.example.appdocsachfinal.Model.ModelPdf;
 import com.example.appdocsachfinal.Activities.PdfDetailActivity;
 import com.example.appdocsachfinal.MyApplication;
@@ -65,13 +66,14 @@ public class AdapterPdfUser extends RecyclerView.Adapter<AdapterPdfUser.HolderPd
                 ""+categoryId,
                 holder.txttheloai
         );
-        MyApplication.loadPdfFromUrlSinglePage(
-                ""+pdfUrl,
-                ""+title,
-                holder.pdfView,
-                holder.progressBar
-                ,null
-        );
+//        MyApplication.loadPdfFromUrlSinglePage(
+//                ""+pdfUrl,
+//                ""+title,
+//                holder.pdfView,
+//                holder.progressBar
+//                ,null
+//        );
+        MyApplication.loadImageFromUrl(""+pdfId,holder.imageThumb,holder.progressBar);
         MyApplication.LoadPdfSize(
                 ""+pdfUrl,
                 ""+title,
@@ -102,14 +104,16 @@ public class AdapterPdfUser extends RecyclerView.Adapter<AdapterPdfUser.HolderPd
     }
 
     class HolderPdfUser extends RecyclerView.ViewHolder{
-        PDFView pdfView;
+//        PDFView pdfView;
+        ImageView imageThumb;
         ProgressBar progressBar;
         TextView txttitle,txtdes,txttheloai,txtsize,txtdate;
 
         public HolderPdfUser(@NonNull View itemView) {
             super(itemView);
 
-            pdfView =  binding.pdfView;
+//            pdfView =  binding.pdfView;
+            imageThumb = binding.ImageThumb;
             progressBar = binding.progressBar;
             txttitle = binding.txttitle;
             txtdes = binding.txtdes;

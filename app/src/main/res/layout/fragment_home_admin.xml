@@ -8,43 +8,52 @@
     android:layout_marginBottom="96dp">
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:fillViewport="true">
         <LinearLayout
             android:padding="10dp"
             android:gravity="center"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
             android:orientation="vertical">
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center"
-                android:paddingTop="0dp">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Đề xuất"
-                    android:textStyle="bold"
-                    android:textSize="30dp"
-                    android:gravity="center"/>
-
+                android:orientation="vertical"
+                style="@style/Widget.Material3.BottomAppBar">
                 <LinearLayout
-                    android:layout_width="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:paddingLeft="164dp">
-                    <ImageView
-                        android:paddingLeft="15dp"
-                        android:paddingRight="15dp"
-                        android:id="@+id/imageView3"
-                        android:layout_width="wrap_content"
-                        android:layout_height="37dp"
-                        app:srcCompat="@drawable/sharp_search_24"
-                        android:backgroundTint="@color/main_color"/>
+                    android:orientation="horizontal"
+                    >
 
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:paddingLeft="35dp"
+                        android:text="Chào"
+                        android:textSize="18sp" />
+
+                    <TextView
+                        android:id="@+id/txtname"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Name"
+                        android:paddingLeft="8dp"
+                        android:textSize="20sp"
+                        android:textStyle="bold"
+                        android:gravity="center"/>
                 </LinearLayout>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Admin"
+                    android:drawablePadding="8dp"
+                    android:textSize="16sp"
+                    android:drawableLeft="@drawable/baseline_person_24"
+                    android:paddingLeft="35dp"/>
             </LinearLayout>
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -59,61 +68,16 @@
                         android:id="@+id/image_slider"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
-                        app:iss_delay="1000"
-                        app:iss_period="1000"
+                        app:iss_delay="2000"
+                        app:iss_period="2000"
                         app:iss_text_align="CENTER"
+                        android:clickable="true"
                         app:iss_auto_cycle="true"/>
 
                 </androidx.cardview.widget.CardView>
             </RelativeLayout>
 
             <LinearLayout
-                android:layout_marginTop="0dp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_marginStart="16dp"
-                android:layout_marginEnd="16dp"
-                android:gravity="center">
-                <TextView
-                    android:id="@+id/edttruyen1"
-                    android:layout_marginTop="0dp"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_weight="1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Truyen moi"
-                    android:textStyle="bold"
-                    android:textSize="24dp"/>
-                <TextView
-                    android:id="@+id/edtmore1"
-                    android:layout_gravity="center_vertical"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Xem thêm"
-                    android:textColor="@color/black"
-                    />
-            </LinearLayout>
-            <FrameLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <androidx.viewpager2.widget.ViewPager2
-                    android:id="@+id/viewpager2"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"/>
-
-                <ProgressBar
-                    android:id="@+id/progress_bar5"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    style="?android:attr/progressBarStyle" />
-
-            </FrameLayout>
-
-            <LinearLayout
-                android:layout_marginTop="0dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
@@ -127,16 +91,16 @@
                     android:layout_weight="1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Truyen de cu"
+                    android:text="Đề cử"
+                    android:layout_marginBottom="10dp"
                     android:textStyle="bold"
-                    android:textSize="24dp"/>
+                    android:textSize="24sp"/>
                 <TextView
-                    android:id="@+id/edtmore2"
+                    android:id="@+id/edtdecu"
                     android:layout_gravity="center_vertical"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Xem thêm"
-                    android:textColor="@color/black"
                     />
             </LinearLayout>
             <androidx.recyclerview.widget.RecyclerView
@@ -161,17 +125,17 @@
                     android:layout_weight="1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Tai ve nhieu nhat"
+                    android:text="Đọc nhiều nhất"
+                    android:layout_marginBottom="10dp"
                     android:textStyle="bold"
-                    android:textSize="24dp"/>
+                    android:textSize="24sp"/>
 
                 <TextView
-                    android:id="@+id/edtmore3"
+                    android:id="@+id/edtdocnhieu"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
-                    android:text="Xem thêm"
-                    android:textColor="@color/black" />
+                    android:text="Xem thêm" />
             </LinearLayout>
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/downloadRCV"
@@ -180,17 +144,24 @@
                 android:orientation="horizontal"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 tools:listitem="@layout/row_pdf_list" />
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/theloaiRCV"
+            <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:stackFromEnd="true"
-                android:scrollbars="none"
-                android:nestedScrollingEnabled="false"
-                android:orientation="horizontal"
-                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                tools:listitem="@layout/item_list_home"/>
-
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp">
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/theloaiRCV"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:clipToPadding="false"
+                    android:overScrollMode="never"
+                    android:paddingBottom="4dp"
+                    android:paddingTop="4dp"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    android:orientation="vertical"
+                    android:nestedScrollingEnabled="false"
+                    tools:listitem="@layout/item_list_home"/>
+            </FrameLayout>
             <Button
                 android:id="@+id/buttonkhampha"
                 app:backgroundTint="@null"

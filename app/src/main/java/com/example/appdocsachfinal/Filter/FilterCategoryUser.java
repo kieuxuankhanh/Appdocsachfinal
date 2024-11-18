@@ -1,19 +1,19 @@
-package com.example.appdocsachfinal.Model;
+package com.example.appdocsachfinal.Filter;
 
 import android.widget.Filter;
 
-import com.example.appdocsachfinal.Adapter.AdapterCategory;
-import com.example.appdocsachfinal.Adapter.AdapterPdfAdmin;
+import com.example.appdocsachfinal.Adapter.AdapterCategoryUser;
+import com.example.appdocsachfinal.Model.ModelCategory;
 
 import java.util.ArrayList;
 
-public class FilterPdfAdmin extends Filter {
-    ArrayList<ModelPdf> filterList;
-    AdapterPdfAdmin adapterPdfAdmin;
+public class FilterCategoryUser extends Filter {
+    ArrayList<ModelCategory> filterList;
+    AdapterCategoryUser adapterCategoryUser;
 
-    public FilterPdfAdmin(ArrayList<ModelPdf> filterList, AdapterPdfAdmin adapterPdfAdmin) {
+    public FilterCategoryUser(ArrayList<ModelCategory> filterList, AdapterCategoryUser adapterCategoryUser) {
         this.filterList = filterList;
-        this.adapterPdfAdmin = adapterPdfAdmin;
+        this.adapterCategoryUser = adapterCategoryUser;
     }
 
     @Override
@@ -21,10 +21,10 @@ public class FilterPdfAdmin extends Filter {
         FilterResults results = new FilterResults();
         if (constraint != null && constraint.length() > 0){
             constraint = constraint.toString().toUpperCase();
-            ArrayList<ModelPdf> filterdModels = new ArrayList<>();
+            ArrayList<ModelCategory> filterdModels = new ArrayList<>();
 
             for (int i=0;i<filterList.size();i++){
-                if (filterList.get(i).getTitle().toUpperCase().contains(constraint)){
+                if (filterList.get(i).getCategory().toUpperCase().contains(constraint)){
                     filterdModels.add(filterList.get(i));
                 }
             }
@@ -40,8 +40,8 @@ public class FilterPdfAdmin extends Filter {
 
     @Override
     protected void publishResults(CharSequence constraint, FilterResults results) {
-        adapterPdfAdmin.pdfArrayList = (ArrayList<ModelPdf>)results.values;
-        adapterPdfAdmin.notifyDataSetChanged();
+        adapterCategoryUser.catagoryArrayList = (ArrayList<ModelCategory>)results.values;
+        adapterCategoryUser.notifyDataSetChanged();
 
     }
 }

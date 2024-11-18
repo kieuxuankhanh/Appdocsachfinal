@@ -1,20 +1,27 @@
 package com.example.appdocsachfinal;
-
 import static com.example.appdocsachfinal.Constants.MAX_BYTES_PDF;
 
 import android.app.Application;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.os.Environment;
 import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 import com.github.barteksc.pdfviewer.PDFView;
 import com.github.barteksc.pdfviewer.listener.OnErrorListener;
 import com.github.barteksc.pdfviewer.listener.OnLoadCompleteListener;
@@ -48,38 +55,60 @@ public class MyApplication  extends Application {
         Calendar cal = Calendar.getInstance(Locale.ENGLISH);
         cal.setTimeInMillis(timestamp);
         String date = DateFormat.format("dd/MM/yyyy",cal).toString();
-
         return date;
     }
-    public static void deleteBook(Context context, String bookId,String bookUrl,String bookTitle) {
+
+    public static void deleteBook(Context context, String bookId, String bookUrl, String bookTitle) {
         String TAG = "DELETE_BOOK_TAG";
-        Log.d(TAG,"deleteBook: Dang xoa...");
+        Log.d(TAG, "deleteBook: Đang xóa...");
         ProgressDialog progressDialog = new ProgressDialog(context);
-        progressDialog.setTitle("Doi ty");
+        progressDialog.setTitle("Đợi một chút nha!!!");
+        progressDialog.show();
+
         StorageReference storageReference = FirebaseStorage.getInstance().getReferenceFromUrl(bookUrl);
         storageReference.delete()
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void unused) {
-                        Log.d(TAG, "OnSuccess: Xoa khoi bo nho ");
-                        Log.d(TAG, "OnSuccess: Dang xoa khoi db ");
-                        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Books");
-                        reference.child(bookId)
-                                .removeValue()
+                        Log.d(TAG, "OnSuccess: Xóa khỏi bộ nhớ ");
+                        Log.d(TAG, "OnSuccess: Xóa khỏi dữ liệu ");
+
+                        // Xóa từ bảng Books
+                        DatabaseReference booksRef = FirebaseDatabase.getInstance().getReference("Books");
+                        booksRef.child(bookId).removeValue()
                                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                                     @Override
                                     public void onSuccess(Void unused) {
-                                        Log.d(TAG,"onSuccess: Xoa trong db");
-                                        progressDialog.dismiss();
-                                        Toast.makeText(context, "Xoa sach thanh cong", Toast.LENGTH_SHORT).show();
+                                        // Sau khi xóa sách thành công, xóa khỏi tất cả Favorites
+                                        DatabaseReference favRef = FirebaseDatabase.getInstance().getReference("Users");
+                                        favRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                                            @Override
+                                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                                for (DataSnapshot userSnapshot : snapshot.getChildren()) {
+                                                    // Kiểm tra và xóa sách khỏi Favorites của mỗi user
+                                                    if (userSnapshot.child("Favorites").exists()) {
+                                                        DatabaseReference userFavRef = favRef.child(userSnapshot.getKey()).child("Favorites").child(bookId);
+                                                        userFavRef.removeValue();
+                                                    }
+                                                }
+                                                progressDialog.dismiss();
+                                                Toast.makeText(context, "Xóa sách thành công", Toast.LENGTH_SHORT).show();
+                                            }
+
+                                            @Override
+                                            public void onCancelled(@NonNull DatabaseError error) {
+                                                progressDialog.dismiss();
+                                                Toast.makeText(context, "" + error.getMessage(), Toast.LENGTH_SHORT).show();
+                                            }
+                                        });
                                     }
                                 })
                                 .addOnFailureListener(new OnFailureListener() {
                                     @Override
                                     public void onFailure(@NonNull Exception e) {
-                                        Log.d(TAG,"onFailure: Xoa sach that bai"+e.getMessage());
+                                        Log.d(TAG, "onFailure: Xóa sách thất bại " + e.getMessage());
                                         progressDialog.dismiss();
-                                        Toast.makeText(context, ""+e.getMessage(), Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(context, "" + e.getMessage(), Toast.LENGTH_SHORT).show();
                                     }
                                 });
                     }
@@ -87,9 +116,9 @@ public class MyApplication  extends Application {
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Log.d(TAG, "onFailure: Xoa sach bi loi"+e.getMessage());
+                        Log.d(TAG, "onFailure: Xóa sách bị lỗi " + e.getMessage());
                         progressDialog.dismiss();
-                        Toast.makeText(context, ""+e.getMessage(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context, "" + e.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });
     }
@@ -166,10 +195,68 @@ public class MyApplication  extends Application {
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Log.d(TAG,"onFailure: Lay file that bai"+e.getMessage());
+                        Log.d(TAG,"onFailure: Tải file thất bại"+e.getMessage());
                     }
                 });
     }
+    public static void loadImageFromUrl(String bookId, ImageView imageView, ProgressBar progressBar) {
+        String TAG = "IMAGE_LOAD_TAG";
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Books");
+
+        ref.child(bookId).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                String imageThumbUrl = snapshot.child("imageThumb").getValue(String.class);
+
+                if (imageThumbUrl == null || imageThumbUrl.isEmpty()) {
+                    Log.e(TAG, "Image URL is null or empty");
+                    progressBar.setVisibility(View.INVISIBLE);
+                    imageView.setImageResource(R.drawable.skeleton);
+                    return;
+                }
+
+                try {
+                    if (imageView.getContext() == null) {
+                        Log.e(TAG, "Context is null");
+                        return;
+                    }
+
+                    Glide.with(imageView.getContext())
+                            .load(imageThumbUrl)
+                            .listener(new RequestListener<Drawable>() {
+                                @Override
+                                public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                                    progressBar.setVisibility(View.INVISIBLE);
+                                    Log.e(TAG, "Glide load failed: " + (e != null ? e.getMessage() : "unknown error"));
+                                    return false;
+                                }
+
+                                @Override
+                                public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                                    progressBar.setVisibility(View.INVISIBLE);
+                                    Log.d(TAG, "Hiển thị ảnh thành công");
+                                    return false;
+                                }
+                            })
+                            .placeholder(R.drawable.skeleton)
+                            .error(R.drawable.warning)
+                            .into(imageView);
+
+                } catch (Exception e) {
+                    progressBar.setVisibility(View.INVISIBLE);
+                    Log.e(TAG, "Exception in loadImageFromUrl: " + e.getMessage());
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                progressBar.setVisibility(View.INVISIBLE);
+                Log.e(TAG, "Database error: " + error.getMessage());
+            }
+        });
+    }
+
     public static void loadCategory(String categoryId, TextView txttheloai) {
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Categories");
         ref.child(categoryId)
@@ -211,7 +298,7 @@ public class MyApplication  extends Application {
                 });
     }
     public static void downloadBook(Context context,String bookId, String bookTitle, String bookUrl){
-        Log.d(TAG_DOWNLOAD, "downloadBook: Dang tai sach");
+        Log.d(TAG_DOWNLOAD, "downloadBook: Đang tải sách");
         String nameWithExtension = bookTitle + ".pdf";
         Log.d(TAG_DOWNLOAD,"downloadBook: NAME: "+nameWithExtension);
         ProgressDialog progressDialog = new ProgressDialog(context);
@@ -233,14 +320,14 @@ public class MyApplication  extends Application {
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Log.d(TAG_DOWNLOAD,"onFailure: Tai xuong that bai " +e.getMessage());
+                        Log.d(TAG_DOWNLOAD,"onFailure: Tải xuống thất bại" +e.getMessage());
                         progressDialog.dismiss();
-                        Toast.makeText(context, "Tai xuong that bai "+e.getMessage(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context, "Tải xuống thất bại"+e.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });
     }
     private static void saveDownloadedBook(Context context, ProgressDialog progressDialog, byte[] bytes, String nameWithExtension, String bookId) {
-        Log.d(TAG_DOWNLOAD, "saveDownloadedBook: Da luu sach tai xuong");
+        Log.d(TAG_DOWNLOAD, "saveDownloadedBook: Đã lưu sách tải xuống");
         try{
             File downloadFolder = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
             downloadFolder.mkdir();
@@ -248,31 +335,31 @@ public class MyApplication  extends Application {
             FileOutputStream out = new FileOutputStream(filePath);
             out.write(bytes);
             out.close();
-            Toast.makeText(context, "Tai xuong thu muc thanh cong", Toast.LENGTH_SHORT).show();
-            Log.d(TAG_DOWNLOAD,"saveDownloadedBook: Tai xuong thu muc thanh cong");
+            Toast.makeText(context, "Tải về máy thành công", Toast.LENGTH_SHORT).show();
+            Log.d(TAG_DOWNLOAD,"saveDownloadedBook: Tải về máy thành công");
             progressDialog.dismiss();
             incrementBookDownloadCount(bookId);
             
         }catch (Exception e){
-            Log.d(TAG_DOWNLOAD, "saveDownloadedBook: That bai"+e.getMessage());
-            Toast.makeText(context, "That bai"+e.getMessage(), Toast.LENGTH_SHORT).show();
+            Log.d(TAG_DOWNLOAD, "saveDownloadedBook: Thất bại"+e.getMessage());
+            Toast.makeText(context, "Thất bại"+e.getMessage(), Toast.LENGTH_SHORT).show();
             progressDialog.dismiss();
         }
     }
     private static void incrementBookDownloadCount(String bookId) {
-        Log.d(TAG_DOWNLOAD, "incrementBookDownloadCount: Dem so luot tai");
+        Log.d(TAG_DOWNLOAD, "incrementBookDownloadCount: Đếm số lượt tải");
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Books");
         ref.child(bookId)
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         String downloadsCount = ""+snapshot.child("downloadsCount").getValue();
-                        Log.d(TAG_DOWNLOAD,"onDataChange: So luot tai: "+downloadsCount);
+                        Log.d(TAG_DOWNLOAD,"onDataChange: Số lượt tải: "+downloadsCount);
                         if (downloadsCount.equals("")||downloadsCount.equals("null")){
                             downloadsCount = "0";
                         }
                         long newDownloadsCount = Long.parseLong(downloadsCount)+1;
-                        Log.d(TAG_DOWNLOAD,"onDataChange: Luot tai ve moi: "+newDownloadsCount);
+                        Log.d(TAG_DOWNLOAD,"onDataChange: Lượt tải về mới: "+newDownloadsCount);
 
                         HashMap<String,Object> hashMap = new HashMap<>();
                         hashMap.put("downloadsCount", newDownloadsCount);
@@ -281,13 +368,13 @@ public class MyApplication  extends Application {
                                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                                     @Override
                                     public void onSuccess(Void unused) {
-                                        Log.d(TAG_DOWNLOAD,"onSuccess: Cap nhat luot tai xuong");
+                                        Log.d(TAG_DOWNLOAD,"onSuccess: Cập nhật lượt tải xuống");
                                     }
                                 })
                                 .addOnFailureListener(new OnFailureListener() {
                                     @Override
                                     public void onFailure(@NonNull Exception e) {
-                                        Log.d(TAG_DOWNLOAD,"onFailure: Cap nhat luot tai xuong that bai"+e.getMessage());
+                                        Log.d(TAG_DOWNLOAD,"onFailure: Cập nhật lượt tải xuống thất bại"+e.getMessage());
                                     }
                                 });
                     }
@@ -311,7 +398,7 @@ public class MyApplication  extends Application {
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void unused) {
-                        Toast.makeText(context, "Them vao yeu thich", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context, "Yêu Thích", Toast.LENGTH_SHORT).show();
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
@@ -330,7 +417,7 @@ public class MyApplication  extends Application {
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void unused) {
-                        Toast.makeText(context, "Xoa yeu thich", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context, "Xóa yêu thích", Toast.LENGTH_SHORT).show();
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {

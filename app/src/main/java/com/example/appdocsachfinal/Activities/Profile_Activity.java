@@ -51,7 +51,7 @@ public class Profile_Activity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         progressDialog = new ProgressDialog(this);
-        progressDialog.setTitle("Đợi một chút...");
+        progressDialog.setTitle("Đợi 1 chút nha!!!");
         progressDialog.setCanceledOnTouchOutside(false);
         firebaseAuth = FirebaseAuth.getInstance();
         loadUserInfo();

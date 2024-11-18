@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -17,7 +18,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.appdocsachfinal.Model.FilterPdfAdmin;
+import com.example.appdocsachfinal.Filter.FilterPdfAdmin;
 import com.example.appdocsachfinal.Model.ModelPdf;
 import com.example.appdocsachfinal.Activities.PdfDetailActivity;
 import com.example.appdocsachfinal.Activities.PdfEditActivity;
@@ -41,7 +42,7 @@ public class AdapterPdfAdmin extends RecyclerView.Adapter<AdapterPdfAdmin.Holder
         this.pdfArrayList = pdfArrayList;
         this.filterList = pdfArrayList;
         progressDialog = new ProgressDialog(context);
-        progressDialog.setTitle("Doi ty");
+        progressDialog.setTitle("Đợi một chút nha!!!");
         progressDialog.setCanceledOnTouchOutside(false);
     }
 
@@ -70,13 +71,7 @@ public class AdapterPdfAdmin extends RecyclerView.Adapter<AdapterPdfAdmin.Holder
                 ""+categoryId,
                 holder.txttheloai
         );
-        MyApplication.loadPdfFromUrlSinglePage(
-                ""+pdfUrl,
-                ""+title,
-                holder.pdfView,
-                holder.progressBar
-                ,null
-        );
+        MyApplication.loadImageFromUrl(""+pdfId,holder.imageThumb,holder.progressBar);
         MyApplication.LoadPdfSize(
                 ""+pdfUrl,
                 ""+title,
@@ -103,9 +98,9 @@ public class AdapterPdfAdmin extends RecyclerView.Adapter<AdapterPdfAdmin.Holder
         String bookUrl = modelPdf.getUrl();
         String bookTitle = modelPdf.getTitle();
 
-        String[] options = {"Edit","Delete"};
+        String[] options = {"Sửa","Xóa"};
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        builder.setTitle("Choose Options")
+        builder.setTitle("Chọn tùy chọn")
                 .setItems(options, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -140,14 +135,16 @@ public class AdapterPdfAdmin extends RecyclerView.Adapter<AdapterPdfAdmin.Holder
     }
 
     class HolderPdfAdmin extends RecyclerView.ViewHolder{
-        PDFView pdfView;
+//        PDFView pdfView;
+        ImageView imageThumb;
         ProgressBar progressBar;
         TextView txttitle,txtdes,txttheloai,txtsize,txtdate;
         ImageButton btnmore;
         public HolderPdfAdmin(@NonNull View itemView) {
             super(itemView);
 
-            pdfView =  binding.pdfView;
+//            pdfView =  binding.pdfView;
+            imageThumb = binding.ImageThumb;
             progressBar = binding.progressBar;
             txttitle = binding.txttitle;
             txtdes = binding.txtdes;

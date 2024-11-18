@@ -44,7 +44,6 @@ public class PdfUserFragment extends Fragment {
     public PdfUserFragment() {
         // Required empty public constructor
     }
-
     // TODO: Rename and change types and number of parameters
     public static PdfUserFragment newInstance(String categoryId, String category,String uid) {
         PdfUserFragment fragment = new PdfUserFragment();

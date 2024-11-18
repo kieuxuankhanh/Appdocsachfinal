@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.appdocsachfinal.Activities.DashBoardUserActivity;
+import com.example.appdocsachfinal.Activities.PdfListUserActivity;
 import com.example.appdocsachfinal.Model.ModelCategory;
 import com.example.appdocsachfinal.Model.ModelListPdf;
 import com.example.appdocsachfinal.R;
@@ -42,12 +43,18 @@ public class AdapterCategoryHome extends RecyclerView.Adapter<AdapterCategoryHom
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         ModelCategory modelCategory = categoryArrayList.get(position);
+        String id = modelCategory.getId();
+        String category = modelCategory.getCategory();
+        String uid = modelCategory.getUid();
+        long timestamp = modelCategory.getTimestamp();
+
 
         holder.binding.txttheloai.setText(modelCategory.getCategory());
 
         holder.binding.txtmore.setOnClickListener(v -> {
-            Intent intent = new Intent(context, DashBoardUserActivity.class);
-            intent.putExtra("categoryId", modelCategory.getId());
+            Intent intent = new Intent(context, PdfListUserActivity.class);
+            intent.putExtra("categoryId",id);
+            intent.putExtra("categoryTitle",category);
             context.startActivity(intent);
         });
 
@@ -56,7 +63,6 @@ public class AdapterCategoryHome extends RecyclerView.Adapter<AdapterCategoryHom
 
     private void loadBooksInCategory(String categoryId, RecyclerView recyclerView) {
         DatabaseReference booksRef = FirebaseDatabase.getInstance().getReference("Books");
-
         booksRef.orderByChild("categoryId").equalTo(categoryId)
                 .addValueEventListener(new ValueEventListener() {
                     @Override
@@ -69,7 +75,6 @@ public class AdapterCategoryHome extends RecyclerView.Adapter<AdapterCategoryHom
                                 booksList.add(book);
                             }
                         }
-
                         AdapterPdfListUser bookAdapter = new AdapterPdfListUser(context, booksList);
                         recyclerView.setLayoutManager(new GridLayoutManager(context, 3));
                         recyclerView.setAdapter(bookAdapter);

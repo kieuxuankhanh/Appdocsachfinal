@@ -43,8 +43,9 @@
         android:drawableStart="@drawable/sharp_search_24"
         android:drawableTint="@color/main_color"
         android:padding="10dp"
+        android:textColorHint="@color/grey"
+        android:textColor="@color/black"
         android:background="@color/white"
-        android:textColorHint="@color/main_color"
         />
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/catagoryRecycleview"

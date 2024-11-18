@@ -6,16 +6,23 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.appdocsachfinal.Activities.PdfDetailActivity;
+import com.example.appdocsachfinal.Filter.FilterFavorite;
+import com.example.appdocsachfinal.Filter.FilterPdfUser;
 import com.example.appdocsachfinal.Model.ModelPdf;
 import com.example.appdocsachfinal.MyApplication;
+import com.example.appdocsachfinal.R;
 import com.example.appdocsachfinal.databinding.ActivityFavoriteBookBinding;
 import com.example.appdocsachfinal.databinding.RowPdfFavoriteBinding;
 import com.github.barteksc.pdfviewer.PDFView;
@@ -27,16 +34,18 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
-public class AdapterFavoriteBook extends RecyclerView.Adapter<AdapterFavoriteBook.HolderFavoriteBook>{
+public class AdapterFavoriteBook extends RecyclerView.Adapter<AdapterFavoriteBook.HolderFavoriteBook> implements Filterable {
 
     private Context context;
-    private ArrayList<ModelPdf> pdfArrayList;
+    public ArrayList<ModelPdf> pdfArrayList, filterList;
     private RowPdfFavoriteBinding binding;
     private static final String TAG = "FAV_BOOK_TAG";
+    private FilterFavorite filterFavorite;
 
     public AdapterFavoriteBook(Context context, ArrayList<ModelPdf> pdfArrayList) {
         this.context = context;
         this.pdfArrayList = pdfArrayList;
+        this.filterList = pdfArrayList;
     }
 
     @NonNull
@@ -82,7 +91,7 @@ public class AdapterFavoriteBook extends RecyclerView.Adapter<AdapterFavoriteBoo
                         String uid = ""+snapshot.child("uid").getValue();
                         String viewsCount = ""+snapshot.child("viewsCount").getValue();
                         String downloadsCount = ""+snapshot.child("downloadsCount").getValue();
-
+                        String imageThumb = ""+snapshot.child("imageThumb").getValue();
                         modelPdf.setFavorite(true);
                         modelPdf.setTitle(bookTitle);
                         modelPdf.setDescription(description);
@@ -94,12 +103,21 @@ public class AdapterFavoriteBook extends RecyclerView.Adapter<AdapterFavoriteBoo
                         String date = MyApplication.formatTimestamp(Long.parseLong(timestamp));
 
                         MyApplication.loadCategory(categoryId,holder.txttheloai);
-                        MyApplication.loadPdfFromUrlSinglePage(""+bookUrl,""+bookTitle,holder.pdfView,holder.progressBar,null);
+//                        MyApplication.loadPdfFromUrlSinglePage(""+bookUrl,""+bookTitle,holder.pdfView,holder.progressBar,null);
+                        MyApplication.loadImageFromUrl(""+bookId,holder.imageThumb,holder.progressBar);
                         MyApplication.LoadPdfSize(""+bookUrl,""+bookTitle,holder.txtsize);
 
                         holder.txttitle.setText(bookTitle);
                         holder.txtdes.setText(description);
                         holder.txtdate.setText(date);
+                        try{
+                            Glide.with(context)
+                                    .load(imageThumb)
+                                    .placeholder(R.drawable.avatar)
+                                    .into(holder.imageThumb);
+                        }catch (Exception e){
+                            holder.imageThumb.setImageResource(R.drawable.avatar);
+                        }
                     }
 
                     @Override
@@ -114,9 +132,18 @@ public class AdapterFavoriteBook extends RecyclerView.Adapter<AdapterFavoriteBoo
         return pdfArrayList.size();
     }
 
+    @Override
+    public Filter getFilter() {
+        if (filterFavorite == null){
+            filterFavorite = new FilterFavorite(filterList,this);
+        }
+        return filterFavorite;
+    }
+
     class HolderFavoriteBook extends RecyclerView.ViewHolder{
 
-        PDFView pdfView;
+//        PDFView pdfView;
+        ImageView imageThumb;
         ProgressBar progressBar;
         TextView txttitle, txtdes, txttheloai, txtsize,txtdate;
         ImageButton btnfavor;
@@ -124,7 +151,8 @@ public class AdapterFavoriteBook extends RecyclerView.Adapter<AdapterFavoriteBoo
         public HolderFavoriteBook(@NonNull View itemView) {
             super(itemView);
 
-            pdfView = binding.pdfView;
+//            pdfView = binding.pdfView;
+            imageThumb = binding.ImageThumb;
             progressBar = binding.progressBar;
             txttitle = binding.txttitle;
             txtdes = binding.txtdes;

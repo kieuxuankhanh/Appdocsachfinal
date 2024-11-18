@@ -1,6 +1,7 @@
 package com.example.appdocsachfinal.Activities;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 
@@ -18,46 +19,96 @@ import com.google.firebase.database.ValueEventListener;
 
 public class HelloActivity extends AppCompatActivity {
     private FirebaseAuth firebaseAuth;
+    private SharedPreferences sharedPreferences;
+    private static final int SPLASH_TIME = 2000;
+    private boolean dataLoaded = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_hello);
+
+        // lưu trữ thông tin người dùng
+        sharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE);
+
+        // Khởi tạo Firebase
         firebaseAuth = FirebaseAuth.getInstance();
+        //lưu trữ dữ liệu để truy cập offline
+        FirebaseDatabase.getInstance().setPersistenceEnabled(true);
+
+        // Bắt đầu load data ngay
+        checkUserInBackground();
+
+        // Timer màn hình chào
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                checkUser();
+                navigateToNextScreen();
             }
-        }, 2000);
+        }, SPLASH_TIME);
     }
 
-    public void checkUser() {
+    private void checkUserInBackground() {
         FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
-        if (firebaseUser == null){
+        if (firebaseUser != null) {
+            DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users")
+                    .child(firebaseUser.getUid());
+
+            // Enable disk persistence
+            ref.keepSynced(true);
+
+            ref.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    String userType = "" + snapshot.child("userType").getValue();
+                    sharedPreferences.edit()
+                            .putString("userType", userType)
+                            .putString("uid", firebaseUser.getUid())
+                            .apply();
+                    dataLoaded = true;
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+                    dataLoaded = true;
+                }
+            });
+        } else {
+            dataLoaded = true;
+        }
+    }
+
+    private void navigateToNextScreen() {
+        // Nếu data chưa load xong, đợi thêm 500ms
+        if (!dataLoaded) {
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    navigateToNextScreen();
+                }
+            }, 500);
+            return;
+        }
+
+        FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
+        if (firebaseUser == null) {
             startActivity(new Intent(HelloActivity.this, LoginActivity.class));
             finish();
-        }else {
-            DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users");
-            ref.child(firebaseUser.getUid())
-                    .addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot snapshot) {
-                            String userType = "" + snapshot.child("userType").getValue();
-
-                            if (userType.equals("user")){
-                                startActivity(new Intent(HelloActivity.this, MainUserActivity.class));
-                                finish();
-                            }else if (userType.equals("admin")){
-                                startActivity(new Intent(HelloActivity.this, MainAdminActivity.class));
-                                finish();
-                            }
-                        }
-
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError error) {
-
-                        }
-                    });
+            return;
         }
+
+        String userType = sharedPreferences.getString("userType", null);
+        Intent intent;
+
+        if ("user".equals(userType)) {
+            intent = new Intent(HelloActivity.this, MainUserActivity.class);
+        } else if ("admin".equals(userType)) {
+            intent = new Intent(HelloActivity.this, MainAdminActivity.class);
+        } else {
+            intent = new Intent(HelloActivity.this, LoginActivity.class);
+        }
+
+        startActivity(intent);
+        finish();
     }
 }

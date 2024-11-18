@@ -1,12 +1,14 @@
 [versions]
 agp = "8.5.2"
+firebaseBom = "33.6.0"
+googleServices = "4.4.2"
 junit = "4.13.2"
 junitVersion = "1.2.1"
 espressoCore = "3.6.1"
 appcompat = "1.7.0"
 material = "1.12.0"
 activity = "1.9.3"
-constraintlayout = "2.1.4"
+constraintlayout = "2.2.0"
 googleGmsGoogleServices = "4.4.2"
 firebaseAuth = "23.1.0"
 firebaseAnalytics = "22.1.2"
@@ -15,17 +17,20 @@ firebaseStorage = "21.0.1"
 glide = "4.16.0"
 cardview = "1.0.0"
 circleindicator = "2.1.6"
+playServicesAuth = "21.2.0"
 swiperefreshlayout = "1.1.0"
 viewpager2 = "1.1.0"
 circleimageview = "3.1.0"
-navigationFragment = "2.8.3"
-navigationUi = "2.8.3"
+navigationFragment = "2.8.4"
+navigationUi = "2.8.4"
 androidPdfViewer = "3.2.0-beta.3"
 imageSlideshow = "0.1.2"
 
 
 
 [libraries]
+firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebaseBom" }
+google-services = { module = "com.google.gms:google-services", version.ref = "googleServices" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 ext-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
@@ -40,6 +45,7 @@ firebase-storage = { group = "com.google.firebase", name = "firebase-storage", v
 glide = { group = "com.github.bumptech.glide", name = "glide", version.ref = "glide" }
 cardview = { group = "androidx.cardview", name = "cardview", version.ref = "cardview" }
 circleindicator = { group = "me.relex", name = "circleindicator", version.ref = "circleindicator" }
+play-services-auth = { module = "com.google.android.gms:play-services-auth", version.ref = "playServicesAuth" }
 swiperefreshlayout = { module = "androidx.swiperefreshlayout:swiperefreshlayout", version.ref = "swiperefreshlayout" }
 viewpager2 = { group = "androidx.viewpager2", name = "viewpager2", version.ref = "viewpager2" }
 circleimageview = { group = "de.hdodenhof", name = "circleimageview", version.ref = "circleimageview" }

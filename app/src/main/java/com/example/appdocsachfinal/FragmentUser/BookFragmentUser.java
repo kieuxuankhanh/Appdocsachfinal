@@ -12,6 +12,7 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.example.appdocsachfinal.Adapter.AdapterCategoryUser;
 import com.example.appdocsachfinal.Model.ModelCategory;
@@ -24,6 +25,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 
 public class BookFragmentUser extends Fragment {
@@ -75,13 +78,33 @@ public class BookFragmentUser extends Fragment {
                     ModelCategory modelCategory = ds.getValue(ModelCategory.class);
                     categoryArrayList.add(modelCategory);
                 }
-                adapterCategoryUser = new AdapterCategoryUser(requireActivity(),categoryArrayList);
+
+                // Sắp xếp danh sách theo tên category
+                Collections.sort(categoryArrayList, new Comparator<ModelCategory>() {
+                    @Override
+                    public int compare(ModelCategory c1, ModelCategory c2) {
+                        return c1.getCategory().compareToIgnoreCase(c2.getCategory());
+                    }
+                });
+
+                // Tùy chọn: đưa category "Khác" xuống cuối danh sách
+                if (categoryArrayList.size() > 1) {
+                    for (int i = 0; i < categoryArrayList.size(); i++) {
+                        if (categoryArrayList.get(i).getCategory().equals("Khác")) {
+                            ModelCategory other = categoryArrayList.remove(i);
+                            categoryArrayList.add(other);
+                            break;
+                        }
+                    }
+                }
+
+                adapterCategoryUser = new AdapterCategoryUser(requireActivity(), categoryArrayList);
                 binding.catagoryRecycleview.setAdapter(adapterCategoryUser);
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-
+                Toast.makeText(requireActivity(), "Lỗi: " + error.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }

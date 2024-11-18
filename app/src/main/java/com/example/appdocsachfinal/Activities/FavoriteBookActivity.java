@@ -1,6 +1,9 @@
 package com.example.appdocsachfinal.Activities;
 
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -22,6 +25,8 @@ public class FavoriteBookActivity extends AppCompatActivity {
     private ArrayList<ModelPdf> pdfArrayList;
     private AdapterFavoriteBook adapterFavoriteBook;
     private FirebaseAuth firebaseAuth;
+    private boolean isDataLoading = false;
+    private static final String TAG = "FAVORITE_LIST_TAG";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,15 +35,46 @@ public class FavoriteBookActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
         firebaseAuth = FirebaseAuth.getInstance();
         loadFavoriteBook();
+        setupSwipeRefresh();
         binding.btnback.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 finish();
             }
         });
+        binding.edtsearch.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                try {
+                    adapterFavoriteBook.getFilter().filter(s);
+                }catch (Exception e){
+                    Log.d(TAG,"onTextChanged: "+e.getMessage());
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
 
     }
-
+    private void setupSwipeRefresh() {
+        if (binding != null && binding.swipeRefreshLayout != null) {
+            binding.swipeRefreshLayout.setOnRefreshListener(() -> {
+                if (!isDataLoading) {
+                    loadFavoriteBook();
+                }
+                binding.swipeRefreshLayout.setRefreshing(false);
+            });
+        }
+    }
+    //Đẩy id của sách yêu thích lên bảng người dùng
     private void loadFavoriteBook() {
         pdfArrayList = new ArrayList<>();
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users");

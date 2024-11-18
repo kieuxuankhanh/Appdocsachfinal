@@ -1,14 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".FragmentUser.NotiFragmentUser">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <RelativeLayout
+        android:id="@+id/toolbarRLV"
+        android:padding="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="?actionBarSize"
+        android:background="@drawable/bg_text"
+        >
+        <TextView
+            android:id="@+id/txtsubTitle"
+            android:gravity="center_horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="WISDOM"
+            android:textSize="27dp"
+            android:textStyle="bold"
+            android:layout_centerInParent="true"
+            android:textColor="@color/main_color" />
+
+    </RelativeLayout>
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/notificationsRv"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="user" />
+        android:layout_below="@id/toolbarRLV"
+        android:layout_marginTop="10dp"
+        tools:listitem="@layout/row_noti"
+        android:padding="5dp"
+        android:layout_marginBottom="96dp"/>
 
-</FrameLayout>
+</RelativeLayout>

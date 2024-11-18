@@ -1,18 +1,19 @@
-package com.example.appdocsachfinal.Model;
+package com.example.appdocsachfinal.Filter;
 
 import android.widget.Filter;
 
-import com.example.appdocsachfinal.Adapter.AdapterPdfUser;
+import com.example.appdocsachfinal.Adapter.AdapterFavoriteBook;
+import com.example.appdocsachfinal.Model.ModelPdf;
 
 import java.util.ArrayList;
 
-public class FilterPdfUser extends Filter {
+public class FilterFavorite extends Filter {
     ArrayList<ModelPdf> filterList;
-    AdapterPdfUser adapterPdfUser;
+    AdapterFavoriteBook adapterFavoriteBook;
 
-    public FilterPdfUser(ArrayList<ModelPdf> filterList, AdapterPdfUser adapterPdfUser) {
+    public FilterFavorite(ArrayList<ModelPdf> filterList, AdapterFavoriteBook adapterFavoriteBook) {
         this.filterList = filterList;
-        this.adapterPdfUser = adapterPdfUser;
+        this.adapterFavoriteBook = adapterFavoriteBook;
     }
 
     @Override
@@ -38,7 +39,7 @@ public class FilterPdfUser extends Filter {
 
     @Override
     protected void publishResults(CharSequence constraint, FilterResults results) {
-        adapterPdfUser.pdfArrayList = (ArrayList<ModelPdf>)results.values;
-        adapterPdfUser.notifyDataSetChanged();
+        adapterFavoriteBook.pdfArrayList = (ArrayList<ModelPdf>)results.values;
+        adapterFavoriteBook.notifyDataSetChanged();
     }
 }

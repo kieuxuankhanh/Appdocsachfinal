@@ -23,13 +23,24 @@
             android:src="@drawable/back" />
 
         <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/logoLB"
             android:layout_width="150dp"
             android:layout_height="150dp"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
             android:src="@drawable/photologo"/>
-
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Thêm thể loại"
+            android:layout_marginTop="5dp"
+            android:layout_below="@+id/logoLB"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:textColor="@color/white"
+            android:gravity="center_horizontal"/>
     </RelativeLayout>
+
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/txtinput"
         android:layout_width="match_parent"

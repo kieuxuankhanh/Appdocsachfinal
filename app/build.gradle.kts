@@ -58,4 +58,7 @@ dependencies {
     implementation(libs.android.pdf.viewer)
     implementation(libs.imageSlideshow)
     implementation(libs.swiperefreshlayout)
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.play.services.auth)
+    implementation ("com.facebook.android:facebook-android-sdk:[4,5)")
 }

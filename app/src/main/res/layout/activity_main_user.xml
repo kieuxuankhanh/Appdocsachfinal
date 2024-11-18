@@ -27,6 +27,8 @@
             android:id="@+id/BottomNvi"
             android:layout_marginRight="16dp"
             app:menu="@menu/bottom_nav_menu"
+            app:itemIconTint="@drawable/bottom_nav_item_color"
+            app:itemTextColor="@drawable/bottom_nav_item_color"
             android:background="@drawable/bg_bottom"
             />
     </com.google.android.material.bottomappbar.BottomAppBar>
@@ -34,6 +36,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/btnfab"
+        app:backgroundTint="@color/main_color"
         android:src="@drawable/ic_baseline_add_24"
         app:layout_anchor="@id/bottomflic"/>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
